@@ -32,14 +32,14 @@ SECRET_KEY = 'django-insecure-377*2c9wgqz_dzm&y1(-!f9x7+5^wi_$(@g))$+mk#(-b2jeox
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
-    'fieldex.up.railway.app', '127.0.0.1',
-    'fieldex.com.co', 'www.fieldex.com.co',
+    'vm-modulares.up.railway.app', '127.0.0.1',
+    'fieldex.com.co', 'www.vm-modulares.com.co',
 ]
-CSRF_TRUSTED_ORIGINS = ["https://*.up.railway.app", "https://*.fieldex.com.co"]
+CSRF_TRUSTED_ORIGINS = ["https://*.up.railway.app", "https://*.vm-modulares.com.co"]
 
-CORS_ORIGINS_WHITELIST = ["https://fieldex.up.railway.app",
-                          "https://fieldex.com.co",
-                          "https://www.fieldex.com.co",]
+CORS_ORIGINS_WHITELIST = ["https://vm-modulares.up.railway.app",
+                          "https://vm-modulares.com.co",
+                          "https://www.vm-modulares.com.co",]
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
@@ -94,7 +94,7 @@ WSGI_APPLICATION = 'Vmmodulares.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-"""
+
 DATABASES = {
     'default': dj_database_url.config(default=os.getenv('DATABASE_PUBLIC_URL'))
 }
@@ -109,7 +109,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',  # Puerto de PostgreSQL
     }
-}
+}"""
 
 
 

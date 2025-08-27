@@ -1,0 +1,1 @@
+web: gunicorn Vmmodulares.wsgi --log-file -
