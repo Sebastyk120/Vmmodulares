@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Fondo blanco -->
+  <rect x="0" y="0" width="32" height="32" fill="white"/>
+  
+  <!-- Borde negro -->
+  <rect x="2" y="8" width="28" height="16" fill="white" stroke="black" stroke-width="2" rx="0"/>
+  
+  <!-- Icono de casa en miniatura -->
+  <g transform="translate(13, 2)">
+    <!-- Techo triangular -->
+    <polygon points="3,3 1,5 5,5" fill="black" stroke="black" stroke-width="0.5"/>
+    
+    <!-- Base de la casa -->
+    <rect x="1.5" y="5" width="3" height="2.5" fill="white" stroke="black" stroke-width="0.5"/>
+    
+    <!-- Mueble/sofá simplificado -->
+    <g transform="translate(1, 6.5)">
+      <!-- Base del sofá -->
+      <rect x="0.5" y="1" width="3" height="1.5" fill="white" stroke="black" stroke-width="0.5" rx="0.3"/>
+      <!-- Brazos -->
+      <circle cx="1" cy="1.7" r="0.4" fill="white" stroke="black" stroke-width="0.5"/>
+      <circle cx="3" cy="1.7" r="0.4" fill="white" stroke="black" stroke-width="0.5"/>
+    </g>
+  </g>
+  
+  <!-- Texto VM simplificado -->
+  <text x="16" y="18" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="black" text-anchor="middle">VM</text>
+</svg>

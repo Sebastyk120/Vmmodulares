@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bg)"/>
+  
+  <!-- Icon -->
+  <g transform="translate(200,150)">
+    <!-- Image icon -->
+    <rect x="-40" y="-30" width="80" height="60" rx="4" fill="#dee2e6" stroke="#adb5bd" stroke-width="2"/>
+    <circle cx="-20" cy="-15" r="8" fill="#6c757d"/>
+    <polygon points="-35,-5 -15,15 5,5 35,25 35,-25 -35,-25" fill="#6c757d"/>
+  </g>
+  
+  <!-- Text -->
+  <text x="200" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#6c757d">
+    Imagen no disponible
+  </text>
+  
+  <!-- VM Modulares watermark -->
+  <text x="200" y="280" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#adb5bd">
+    VM Modulares
+  </text>
+</svg>
