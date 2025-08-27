@@ -48,50 +48,69 @@
     <!-- Header -->
     <header class="header">
         <nav class="navbar">
-            <div class="container">
-                <div class="nav-brand">
-                    <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares" class="logo">
-                </div>
-                
-                <div class="nav-menu" id="nav-menu">
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#inicio" class="nav-link">Inicio</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a href="#productos" class="nav-link dropdown-toggle">Productos</a>
-                            <div class="dropdown-menu">
-                                {% for categoria in categorias %}
-                                <div class="dropdown-section">
-                                    <h4>{{ categoria.nombre|upper }}</h4>
-                                    {% for subcategoria in categoria.subcategoria_set.all %}
-                                    <a href="#{{ subcategoria.nombre|lower|slugify }}" class="dropdown-link navbar-producto-link" data-subcategoria-id="{{ subcategoria.id }}">{{ subcategoria.nombre }}</a>
-                                    {% empty %}
-                                    <span class="dropdown-link disabled">No hay subcategorías disponibles</span>
-                                    {% endfor %}
-                                </div>
-                                {% empty %}
-                                <div class="dropdown-section">
-                                    <span class="dropdown-link disabled">No hay categorías disponibles</span>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#nosotros" class="nav-link">Nosotros</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#contacto" class="nav-link">Contacto</a>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="nav-toggle" id="nav-toggle">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+            <div class="logo">
+                <h1>VM Modulares</h1>
             </div>
+            
+            <ul class="nav-links">
+                <li><a href="#inicio">Inicio</a></li>
+                <li class="dropdown">
+                    <a href="#productos">
+                        <i class="fas fa-cube nav-icon"></i>
+                        Productos
+                    </a>
+                    <div class="dropdown-menu">
+                        {% for categoria in categorias %}
+                        <div class="dropdown-section">
+                            <h4>{{ categoria.nombre|upper }}</h4>
+                            {% for subcategoria in categoria.subcategoria_set.all %}
+                            <a href="#{{ subcategoria.nombre|lower|slugify }}" class="dropdown-link navbar-producto-link" data-subcategoria-id="{{ subcategoria.id }}">{{ subcategoria.nombre }}</a>
+                            {% empty %}
+                            <span class="dropdown-link disabled">No hay subcategorías disponibles</span>
+                            {% endfor %}
+                        </div>
+                        {% empty %}
+                        <div class="dropdown-section">
+                            <span class="dropdown-link disabled">No hay categorías disponibles</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li>
+                    <a href="#nosotros">
+                        <i class="fas fa-users nav-icon"></i>
+                        Nosotros
+                    </a>
+                </li>
+                <li>
+                    <a href="#ventajas">
+                        <i class="fas fa-star nav-icon"></i>
+                        Ventajas
+                    </a>
+                </li>
+                <li>
+                    <a href="#faq">
+                        <i class="fas fa-question-circle nav-icon"></i>
+                        FAQ
+                    </a>
+                </li>
+                <li>
+                    <a href="#contacto">
+                        <i class="fas fa-envelope nav-icon"></i>
+                        Contacto
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/" class="admin-btn" target="_blank" title="Administración">
+                        <i class="fas fa-cog"></i>
+                        <span class="admin-text">Admin</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
+                 <i class="fas fa-bars"></i>
+             </button>
         </nav>
     </header>
 
@@ -102,8 +121,11 @@
         </div>
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000">
-                    <span class="hero-subtitle" data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">Muebles que se adaptan a tu vida</span>
+                <div class="hero-logo" data-aos="zoom-in" data-aos-duration="1000">
+                    <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" class="hero-logo-image">
+                </div>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                    <span class="hero-subtitle" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">Muebles que se adaptan a tu vida</span>
                     Diseñamos <span class="highlight">espacios con alma</span>, a tu medida
                 </h1>
                 <div class="hero-features" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">

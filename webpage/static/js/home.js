@@ -89,9 +89,9 @@ class Utils {
 class Navigation {
     constructor() {
         this.header = document.querySelector('.header');
-        this.navToggle = document.querySelector('.nav-toggle');
-        this.navMenu = document.querySelector('.nav-menu');
-        this.navLinks = document.querySelectorAll('.nav-link');
+        this.navToggle = document.querySelector('.mobile-nav-toggle');
+        this.navMenu = document.querySelector('.nav-links');
+        this.navLinks = document.querySelectorAll('.nav-links a');
         this.dropdowns = document.querySelectorAll('.dropdown');
         
         this.init();
@@ -123,42 +123,37 @@ class Navigation {
         if (!this.navToggle || !this.navMenu) return;
 
         this.navToggle.addEventListener('click', () => {
-            this.navMenu.classList.toggle('active');
+            this.navMenu.classList.toggle('mobile-active');
             this.navToggle.classList.toggle('active');
             
-            // Animación del botón hamburguesa
-            const bars = this.navToggle.querySelectorAll('.bar');
-            bars.forEach((bar, index) => {
-                if (this.navToggle.classList.contains('active')) {
-                    if (index === 0) bar.style.transform = 'rotate(45deg) translate(6px, 6px)';
-                    if (index === 1) bar.style.opacity = '0';
-                    if (index === 2) bar.style.transform = 'rotate(-45deg) translate(6px, -6px)';
-                } else {
-                    bar.style.transform = 'none';
-                    bar.style.opacity = '1';
-                }
-            });
+            // Cambiar icono del botón
+            const icon = this.navToggle.querySelector('i');
+            if (this.navMenu.classList.contains('mobile-active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
         });
 
         // Cerrar menú al hacer clic en un enlace
         this.navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                this.navMenu.classList.remove('active');
+                this.navMenu.classList.remove('mobile-active');
                 this.navToggle.classList.remove('active');
                 
-                const bars = this.navToggle.querySelectorAll('.bar');
-                bars.forEach(bar => {
-                    bar.style.transform = 'none';
-                    bar.style.opacity = '1';
-                });
+                const icon = this.navToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
             });
         });
 
         // Cerrar menú al hacer clic fuera
         document.addEventListener('click', (e) => {
             if (!this.navMenu.contains(e.target) && !this.navToggle.contains(e.target)) {
-                this.navMenu.classList.remove('active');
+                this.navMenu.classList.remove('mobile-active');
                 this.navToggle.classList.remove('active');
+                
+                const icon = this.navToggle.querySelector('i');
+                icon.className = 'fas fa-bars';
             }
         });
     }
