@@ -1504,6 +1504,12 @@ class MobileProducts {
                 
                 const category = button.dataset.category;
                 this.filterByCategory(category);
+                
+                // Smooth scroll to products section only when user clicks
+                const productsSection = document.querySelector('.products');
+                if (productsSection) {
+                    Utils.smoothScrollTo(productsSection, 800);
+                }
             });
         });
     }
@@ -1583,12 +1589,6 @@ class MobileProducts {
                     section.style.display = 'none';
                 }
             });
-        }
-        
-        // Smooth scroll to products section
-        const productsSection = document.querySelector('.products');
-        if (productsSection) {
-            Utils.smoothScrollTo(productsSection, 800);
         }
     }
 
