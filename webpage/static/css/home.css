@@ -2632,13 +2632,13 @@ body {
     /* Contact Mobile */
     .contact-content {
         grid-template-columns: 1fr;
-        gap: 30px;
+        gap: 20px;
     }
     
     .contact-info {
         position: static;
         order: 2;
-        padding: 30px 20px;
+        padding: 20px 15px;
     }
     
     .contact-form-container {
@@ -2649,19 +2649,106 @@ body {
     .form-row-triple {
         grid-template-columns: 1fr;
         gap: 0;
+        margin-bottom: 8px;
+    }
+    
+    /* Reorganización específica para móviles */
+    .form-row .form-group:first-child {
+        margin-bottom: 8px;
+    }
+    
+    .form-row .form-group:last-child {
+        margin-bottom: 12px;
     }
     
     .contact-form {
-        padding: 30px 20px;
+        padding: 20px 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 12px;
+    }
+    
+    .form-group label {
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .form-group textarea {
+        min-height: 80px;
+        rows: 3;
     }
     
     .contact-item {
-        padding: 10px;
-        margin-bottom: 15px;
+        padding: 8px;
+        margin-bottom: 10px;
     }
     
     .contact-item:hover {
         transform: none;
+    }
+    
+    .contact-item h4 {
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+    
+    .contact-item p {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+    
+    .contact-item i {
+        font-size: 16px;
+    }
+    
+    /* Optimización del captcha para móviles */
+    .captcha-container {
+        padding: 6px 8px;
+        margin-bottom: 6px;
+    }
+    
+    .captcha-image {
+        max-height: 32px;
+    }
+    
+    .captcha-refresh {
+        width: 28px;
+        height: 28px;
+        font-size: 10px;
+    }
+    
+    .captcha-group input[type="text"] {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    
+    /* Optimización del botón para móviles */
+    .btn-full {
+        width: 100%;
+        margin-top: 8px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+    
+    /* Mejora del espaciado general del formulario */
+    .contact-form-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Optimización del textarea */
+    .form-group textarea {
+        resize: vertical;
+        max-height: 120px;
     }
     
     /* Footer Mobile */
@@ -2717,6 +2804,87 @@ body {
     .hero-subtitle {
         font-size: 1rem;
         margin-bottom: 20px;
+    }
+    
+    /* Contact Form Ultra Mobile */
+    .contact-content {
+        gap: 15px;
+    }
+    
+    .contact-form {
+        padding: 15px 10px;
+    }
+    
+    .contact-info {
+        padding: 15px 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    .form-group label {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+    
+    .form-group textarea {
+        min-height: 70px;
+    }
+    
+    .form-row,
+    .form-row-triple {
+        margin-bottom: 10px;
+    }
+    
+    .contact-item {
+        padding: 6px;
+        margin-bottom: 8px;
+    }
+    
+    .contact-item h4 {
+        font-size: 13px;
+        margin-bottom: 2px;
+    }
+    
+    .contact-item p {
+        font-size: 12px;
+    }
+    
+    .contact-item i {
+        font-size: 14px;
+    }
+    
+    .captcha-container {
+        padding: 4px 6px;
+        margin-bottom: 4px;
+    }
+    
+    .captcha-image {
+        max-height: 28px;
+    }
+    
+    .captcha-refresh {
+        width: 24px;
+        height: 24px;
+        font-size: 9px;
+    }
+    
+    .captcha-group input[type="text"] {
+        padding: 6px 8px;
+        font-size: 12px;
+    }
+    
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 13px;
     }
     
     .section-title {
