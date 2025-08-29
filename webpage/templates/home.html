@@ -296,42 +296,112 @@
                 <p class="section-subtitle">Mobiliario que define tendencias y espacios</p>
             </div>
             
+            <!-- Mobile Category Filter -->
+            <div class="mobile-category-filter">
+                <button class="category-filter-btn active" data-category="all">
+                    <i class="fas fa-th-large"></i>
+                    <span>Todos</span>
+                </button>
+                {% for categoria in categorias %}
+                <button class="category-filter-btn" data-category="{{ categoria.nombre|lower|slugify }}">
+                    <i class="fas fa-cube"></i>
+                    <span>{{ categoria.nombre }}</span>
+                </button>
+                {% endfor %}
+            </div>
+            
             <div class="product-categories">
                 {% for categoria in categorias %}
-                <div class="category-section">
-                    <h3 class="category-title">{{ categoria.nombre|upper }}</h3>
-                    <div class="products-grid">
-                        {% for subcategoria in categoria.subcategoria_set.all %}
-                        <div class="product-card" data-subcategoria-id="{{ subcategoria.id }}" data-category="{{ subcategoria.nombre|lower|slugify }}" data-aos="slide-up" data-aos-duration="800" data-aos-delay="100">
-                            <div class="product-image">
-                                {% with foto_destacada=fotos_destacadas|get_item:subcategoria.id %}
-                                    {% if foto_destacada %}
-                                        <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}">
-                                    {% else %}
-                                        <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}">
-                                    {% endif %}
-                                {% endwith %}
-                                <div class="product-overlay">
-                                    <div class="overlay-buttons">
-                                        <button class="btn btn-white btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}">Ver fotos</button>
+                <div class="category-section" data-category-name="{{ categoria.nombre|lower|slugify }}">
+                    <div class="category-header">
+                        <h3 class="category-title">
+                            <i class="fas fa-cube category-icon"></i>
+                            {{ categoria.nombre|upper }}
+                        </h3>
+                        <div class="category-description">
+                            <p>{{ categoria.descripcion|default:"Explora nuestra colección de muebles modulares" }}</p>
+                        </div>
+                        <button class="mobile-category-toggle" data-category="{{ categoria.nombre|lower|slugify }}">
+                            <span class="toggle-text">Ver productos</span>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="category-content" id="category-{{ categoria.nombre|lower|slugify }}">
+                        <div class="subcategory-tabs">
+                            {% for subcategoria in categoria.subcategoria_set.all %}
+                            <button class="subcategory-tab {% if forloop.first %}active{% endif %}" 
+                                    data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
+                                    data-category="{{ categoria.nombre|lower|slugify }}">
+                                {{ subcategoria.nombre }}
+                            </button>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="products-grid">
+                            {% for subcategoria in categoria.subcategoria_set.all %}
+                            <div class="product-card {% if not forloop.first %}hidden{% endif %}" 
+                                 data-subcategoria-id="{{ subcategoria.id }}" 
+                                 data-category="{{ categoria.nombre|lower|slugify }}" 
+                                 data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
+                                 data-aos="slide-up" data-aos-duration="800" data-aos-delay="100">
+                                <div class="product-image">
+                                    {% with foto_destacada=fotos_destacadas|get_item:subcategoria.id %}
+                                        {% if foto_destacada %}
+                                            <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}" loading="lazy">
+                                        {% else %}
+                                            <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}" loading="lazy">
+                                        {% endif %}
+                                    {% endwith %}
+                                    <div class="product-overlay">
+                                        <div class="overlay-buttons">
+                                            <button class="btn btn-white btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}">
+                                                <i class="fas fa-images"></i>
+                                                Ver fotos
+                                            </button>
+                                            <button class="btn btn-outline btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}">
+                                                <i class="fas fa-calculator"></i>
+                                                Cotizar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-info">
+                                    <div class="product-badge">{{ categoria.nombre }}</div>
+                                    <h4>{{ subcategoria.nombre }}</h4>
+                                    <p>{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos" }}</p>
+                                    <div class="product-features">
+                                        <span class="feature-tag">
+                                            <i class="fas fa-palette"></i>
+                                            Personalizable
+                                        </span>
+                                        <span class="feature-tag">
+                                            <i class="fas fa-tools"></i>
+                                            Modular
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="product-info">
-                                <h4>{{ subcategoria.nombre }}</h4>
-                                <p>{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos" }}</p>
+                            {% empty %}
+                            <div class="no-products">
+                                <div class="no-products-content">
+                                    <i class="fas fa-box-open"></i>
+                                    <h4>Sin productos disponibles</h4>
+                                    <p>No hay subcategorías disponibles en esta categoría.</p>
+                                </div>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% empty %}
-                        <div class="no-products">
-                            <p>No hay subcategorías disponibles en esta categoría.</p>
-                        </div>
-                        {% endfor %}
                     </div>
                 </div>
                 {% empty %}
                 <div class="no-categories">
-                    <p>No hay categorías disponibles en este momento.</p>
+                    <div class="no-categories-content">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Sin categorías disponibles</h3>
+                        <p>No hay categorías disponibles en este momento.</p>
+                        <a href="#contacto" class="btn btn-primary">Contáctanos</a>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

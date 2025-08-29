@@ -122,38 +122,118 @@ class Navigation {
     setupMobileMenu() {
         if (!this.navToggle || !this.navMenu) return;
 
-        this.navToggle.addEventListener('click', () => {
-            this.navMenu.classList.toggle('mobile-active');
-            this.navToggle.classList.toggle('active');
-            
-            // Cambiar icono del botón
-            const icon = this.navToggle.querySelector('i');
-            if (this.navMenu.classList.contains('mobile-active')) {
-                icon.className = 'fas fa-times';
-            } else {
-                icon.className = 'fas fa-bars';
-            }
+        // Variables para controlar el estado del menú
+        this.isMenuOpen = false;
+        this.isMobile = window.innerWidth <= 768;
+
+        // Toggle del menú móvil
+        this.navToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMobileMenu();
         });
 
-        // Cerrar menú al hacer clic en un enlace
+        // Manejo de enlaces en móvil
         this.navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                this.navMenu.classList.remove('mobile-active');
-                this.navToggle.classList.remove('active');
-                
-                const icon = this.navToggle.querySelector('i');
-                icon.className = 'fas fa-bars';
+            link.addEventListener('click', (e) => {
+                // Si es un enlace de dropdown en móvil, manejar diferente
+                if (this.isMobile && link.closest('.dropdown')) {
+                    e.preventDefault();
+                    this.toggleMobileDropdown(link.closest('.dropdown'));
+                } else if (link.getAttribute('href')?.startsWith('#')) {
+                    // Cerrar menú solo para enlaces de navegación
+                    this.closeMobileMenu();
+                }
             });
         });
 
         // Cerrar menú al hacer clic fuera
         document.addEventListener('click', (e) => {
-            if (!this.navMenu.contains(e.target) && !this.navToggle.contains(e.target)) {
-                this.navMenu.classList.remove('mobile-active');
-                this.navToggle.classList.remove('active');
-                
-                const icon = this.navToggle.querySelector('i');
-                icon.className = 'fas fa-bars';
+            if (this.isMenuOpen && !this.navMenu.contains(e.target) && !this.navToggle.contains(e.target)) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Cerrar menú con tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isMenuOpen) {
+                this.closeMobileMenu();
+            }
+        });
+
+        // Manejar cambios de tamaño de ventana
+        window.addEventListener('resize', Utils.debounce(() => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth <= 768;
+            
+            if (wasMobile && !this.isMobile) {
+                // Cambió de móvil a desktop
+                this.closeMobileMenu();
+                this.resetDropdowns();
+            }
+        }, 250));
+    }
+
+    toggleMobileMenu() {
+        this.isMenuOpen = !this.isMenuOpen;
+        this.navMenu.classList.toggle('mobile-active', this.isMenuOpen);
+        this.navToggle.classList.toggle('active', this.isMenuOpen);
+        
+        // Cambiar icono del botón con animación
+        const icon = this.navToggle.querySelector('i');
+        icon.style.transform = 'rotate(180deg)';
+        
+        setTimeout(() => {
+            icon.className = this.isMenuOpen ? 'fas fa-times' : 'fas fa-bars';
+            icon.style.transform = 'rotate(0deg)';
+        }, 150);
+
+        // Prevenir scroll del body cuando el menú está abierto
+        document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
+
+        // Agregar clase al header para estilos adicionales
+        this.header.classList.toggle('menu-open', this.isMenuOpen);
+    }
+
+    closeMobileMenu() {
+        if (!this.isMenuOpen) return;
+        
+        this.isMenuOpen = false;
+        this.navMenu.classList.remove('mobile-active');
+        this.navToggle.classList.remove('active');
+        this.header.classList.remove('menu-open');
+        
+        const icon = this.navToggle.querySelector('i');
+        icon.className = 'fas fa-bars';
+        
+        document.body.style.overflow = '';
+        this.resetDropdowns();
+    }
+
+    toggleMobileDropdown(dropdown) {
+        const menu = dropdown.querySelector('.dropdown-menu');
+        const isOpen = dropdown.classList.contains('mobile-dropdown-open');
+        
+        // Cerrar otros dropdowns abiertos
+        this.dropdowns.forEach(d => {
+            if (d !== dropdown) {
+                d.classList.remove('mobile-dropdown-open');
+            }
+        });
+        
+        // Toggle del dropdown actual
+        dropdown.classList.toggle('mobile-dropdown-open', !isOpen);
+        
+        if (menu) {
+            menu.style.maxHeight = isOpen ? '0' : menu.scrollHeight + 'px';
+        }
+    }
+
+    resetDropdowns() {
+        this.dropdowns.forEach(dropdown => {
+            dropdown.classList.remove('mobile-dropdown-open');
+            const menu = dropdown.querySelector('.dropdown-menu');
+            if (menu) {
+                menu.style.maxHeight = '';
             }
         });
     }
@@ -849,44 +929,185 @@ class BackToTop {
 // ===== PERFORMANCE OPTIMIZATION =====
 class PerformanceOptimizer {
     constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.isSlowDevice = this.detectSlowDevice();
         this.init();
     }
 
     init() {
         this.lazyLoadImages();
         this.preloadCriticalResources();
+        this.optimizeForMobile();
+        this.setupPerformanceMonitoring();
+    }
+
+    detectSlowDevice() {
+        // Detectar dispositivos lentos basado en hardware
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const slowConnection = connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g');
+        const lowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
+        const oldDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+        
+        return slowConnection || lowMemory || oldDevice;
     }
 
     lazyLoadImages() {
         const images = document.querySelectorAll('img[data-src]');
         
+        const observerOptions = {
+            rootMargin: this.isMobile ? '50px' : '100px',
+            threshold: 0.1
+        };
+        
         const imageObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
+                    this.loadImageOptimized(img);
                     imageObserver.unobserve(img);
                 }
             });
-        });
+        }, observerOptions);
 
-        images.forEach(img => imageObserver.observe(img));
+        images.forEach(img => {
+            img.classList.add('lazy');
+            imageObserver.observe(img);
+        });
+    }
+
+    loadImageOptimized(img) {
+        const src = img.dataset.src;
+        if (!src) return;
+        
+        // Crear imagen temporal para precargar
+        const tempImg = new Image();
+        
+        tempImg.onload = () => {
+            img.src = src;
+            img.classList.remove('lazy');
+            img.classList.add('loaded');
+        };
+        
+        tempImg.onerror = () => {
+            img.classList.add('error');
+        };
+        
+        // Para móviles, usar versiones más pequeñas si están disponibles
+        if (this.isMobile && img.dataset.srcMobile) {
+            tempImg.src = img.dataset.srcMobile;
+        } else {
+            tempImg.src = src;
+        }
+    }
+
+    optimizeForMobile() {
+        if (!this.isMobile) return;
+        
+        // Reducir animaciones en dispositivos lentos
+        if (this.isSlowDevice) {
+            document.documentElement.style.setProperty('--animation-duration', '0.1s');
+            document.documentElement.classList.add('reduce-motion');
+        }
+        
+        // Optimizar scroll en móviles
+        this.optimizeScrollPerformance();
+        
+        // Reducir calidad de imágenes en conexiones lentas
+        this.optimizeImageQuality();
+    }
+
+    optimizeScrollPerformance() {
+        let ticking = false;
+        
+        const optimizedScrollHandler = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    // Lógica de scroll optimizada
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        
+        // Usar scroll pasivo para mejor rendimiento
+        window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
+    }
+
+    optimizeImageQuality() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        
+        if (connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) {
+            // Reducir calidad de imágenes para conexiones lentas
+            const images = document.querySelectorAll('img');
+            images.forEach(img => {
+                if (img.dataset.srcLowQuality) {
+                    img.dataset.src = img.dataset.srcLowQuality;
+                }
+            });
+        }
+    }
+
+    setupPerformanceMonitoring() {
+        // Monitorear métricas de rendimiento
+        if ('PerformanceObserver' in window) {
+            const observer = new PerformanceObserver((list) => {
+                const entries = list.getEntries();
+                entries.forEach(entry => {
+                    if (entry.entryType === 'largest-contentful-paint') {
+                        // Optimizar si LCP es muy alto
+                        if (entry.startTime > 2500) {
+                            this.enableAggressiveOptimizations();
+                        }
+                    }
+                });
+            });
+            
+            observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input-delay'] });
+        }
+    }
+
+    enableAggressiveOptimizations() {
+        // Activar optimizaciones agresivas para dispositivos muy lentos
+        document.documentElement.classList.add('aggressive-optimizations');
+        
+        // Deshabilitar animaciones no críticas
+        const nonCriticalAnimations = document.querySelectorAll('.animate-on-scroll:not(.critical)');
+        nonCriticalAnimations.forEach(el => {
+            el.classList.remove('animate-on-scroll');
+        });
     }
 
     preloadCriticalResources() {
-        // Precargar fuentes críticas
-        const fontLinks = [
-            'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-            'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap'
-        ];
+        // Precargar fuentes críticas solo si no es un dispositivo lento
+        if (!this.isSlowDevice) {
+            const fontLinks = [
+                'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
+                'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap'
+            ];
 
-        fontLinks.forEach(href => {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'style';
-            link.href = href;
-            document.head.appendChild(link);
+            fontLinks.forEach(href => {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'style';
+                link.href = href;
+                document.head.appendChild(link);
+            });
+        }
+    }
+
+    // Método para optimizar imágenes dinámicamente
+    optimizeImageLoading() {
+        const images = document.querySelectorAll('img:not([data-optimized])');
+        
+        images.forEach(img => {
+            // Añadir loading="lazy" nativo del navegador
+            img.loading = 'lazy';
+            
+            // Añadir decode="async" para mejor rendimiento
+            img.decoding = 'async';
+            
+            // Marcar como optimizada
+            img.dataset.optimized = 'true';
         });
     }
 }
@@ -1258,6 +1479,168 @@ class FotosModal {
     }
 }
 
+// ===== PRODUCTOS MÓVILES =====
+class MobileProducts {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.setupCategoryFilter();
+        this.setupCategoryToggles();
+        this.setupSubcategoryTabs();
+        this.setupProductFiltering();
+    }
+
+    setupCategoryFilter() {
+        const filterButtons = document.querySelectorAll('.category-filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const category = button.dataset.category;
+                this.filterByCategory(category);
+            });
+        });
+    }
+
+    setupCategoryToggles() {
+        const toggleButtons = document.querySelectorAll('.mobile-category-toggle');
+        
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const categorySection = button.closest('.category-section');
+                const content = categorySection.querySelector('.category-content');
+                const isCollapsed = content.classList.contains('collapsed');
+                
+                if (isCollapsed) {
+                    content.classList.remove('collapsed');
+                    button.classList.add('active');
+                } else {
+                    content.classList.add('collapsed');
+                    button.classList.remove('active');
+                }
+            });
+        });
+    }
+
+    setupSubcategoryTabs() {
+        const tabContainers = document.querySelectorAll('.subcategory-tabs');
+        
+        tabContainers.forEach(container => {
+            const tabs = container.querySelectorAll('.subcategory-tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs in this container
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    
+                    const subcategory = tab.dataset.subcategory;
+                    const categorySection = container.closest('.category-section');
+                    this.filterBySubcategory(categorySection, subcategory);
+                });
+            });
+        });
+    }
+
+    setupProductFiltering() {
+        // Initialize with first category active if exists
+        const firstFilterBtn = document.querySelector('.category-filter-btn');
+        if (firstFilterBtn) {
+            firstFilterBtn.classList.add('active');
+            this.filterByCategory(firstFilterBtn.dataset.category);
+        }
+        
+        // Initialize subcategory tabs
+        const firstTabs = document.querySelectorAll('.subcategory-tabs .subcategory-tab:first-child');
+        firstTabs.forEach(tab => {
+            tab.classList.add('active');
+            const subcategory = tab.dataset.subcategory;
+            const categorySection = tab.closest('.category-section');
+            this.filterBySubcategory(categorySection, subcategory);
+        });
+    }
+
+    filterByCategory(category) {
+        const categorySection = document.querySelector(`[data-category="${category}"]`);
+        const allSections = document.querySelectorAll('.category-section');
+        
+        if (category === 'all') {
+            allSections.forEach(section => {
+                section.style.display = 'block';
+            });
+        } else {
+            allSections.forEach(section => {
+                if (section.dataset.category === category) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+        
+        // Smooth scroll to products section
+        const productsSection = document.querySelector('.products');
+        if (productsSection) {
+            Utils.smoothScrollTo(productsSection, 800);
+        }
+    }
+
+    filterBySubcategory(categorySection, subcategory) {
+        const productCards = categorySection.querySelectorAll('.product-card');
+        
+        if (subcategory === 'all') {
+            productCards.forEach(card => {
+                card.classList.remove('hidden');
+            });
+        } else {
+            productCards.forEach(card => {
+                if (card.dataset.subcategory === subcategory) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+        
+        // Update no products message
+        this.updateNoProductsMessage(categorySection);
+    }
+
+    updateNoProductsMessage(categorySection) {
+        const visibleCards = categorySection.querySelectorAll('.product-card:not(.hidden)');
+        const noProductsMsg = categorySection.querySelector('.no-products');
+        
+        if (visibleCards.length === 0) {
+            if (!noProductsMsg) {
+                const message = document.createElement('div');
+                message.className = 'no-products';
+                message.innerHTML = `
+                    <div class="no-products-content">
+                        <i class="fas fa-search"></i>
+                        <h4>No hay productos disponibles</h4>
+                        <p>No se encontraron productos en esta subcategoría.</p>
+                    </div>
+                `;
+                const grid = categorySection.querySelector('.products-grid');
+                grid.appendChild(message);
+            } else {
+                noProductsMsg.style.display = 'block';
+            }
+        } else {
+            if (noProductsMsg) {
+                noProductsMsg.style.display = 'none';
+            }
+        }
+    }
+}
+
 // ===== INICIALIZACIÓN =====
 class App {
     constructor() {
@@ -1298,6 +1681,7 @@ class App {
             this.components.backToTop = new BackToTop();
             this.components.performance = new PerformanceOptimizer();
             this.components.fotosModal = new FotosModal();
+            this.components.mobileProducts = new MobileProducts();
 
             // Configurar eventos globales
             this.setupGlobalEvents();
