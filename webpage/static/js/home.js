@@ -1059,10 +1059,27 @@ class PerformanceOptimizer {
                             this.enableAggressiveOptimizations();
                         }
                     }
+                    if (entry.entryType === 'first-input') {
+                        // Monitorear First Input Delay
+                        if (entry.processingStart - entry.startTime > 100) {
+                            this.enableAggressiveOptimizations();
+                        }
+                    }
                 });
             });
             
-            observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input-delay'] });
+            // Observar métricas de rendimiento por separado para mejor compatibilidad
+            try {
+                observer.observe({ entryTypes: ['largest-contentful-paint'] });
+            } catch (e) {
+                console.warn('LCP observation not supported:', e);
+            }
+            
+            try {
+                observer.observe({ entryTypes: ['first-input'] });
+            } catch (e) {
+                console.warn('First Input observation not supported:', e);
+            }
         }
     }
 
