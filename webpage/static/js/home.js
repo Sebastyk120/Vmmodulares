@@ -141,16 +141,34 @@ class BootstrapNavigation {
 
     setupScrollEffect() {
         const handleScroll = Utils.throttle(() => {
-            if (window.scrollY > 100) {
-                this.navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                this.navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+            const scrollY = window.scrollY;
+            
+            if (scrollY > 50) {
+                this.navbar.classList.add('scrolled');
+                this.navbar.style.backdropFilter = 'blur(20px)';
+                this.navbar.style.transform = 'translateY(0)';
+                
+                // Efecto de parallax suave
+                const parallaxValue = scrollY * 0.1;
+                this.navbar.style.transform = `translateY(${Math.min(parallaxValue, 10)}px)`;
+                
             } else {
-                this.navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                this.navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                this.navbar.classList.remove('scrolled');
+                this.navbar.style.backdropFilter = 'blur(10px)';
+                this.navbar.style.transform = 'translateY(0)';
             }
-        }, 10);
+            
+            // Efecto de opacidad progresiva
+            const opacity = Math.min(scrollY / 100, 1);
+            this.navbar.style.background = `rgba(255, 255, 255, ${0.95 + opacity * 0.03})`;
+            
+        }, 16); // 60fps
 
+        // Inicializar estado
+        handleScroll();
+        
         window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', handleScroll);
     }
 
     setupSmoothScrolling() {
