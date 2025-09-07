@@ -1,6 +1,6 @@
 /**
- * VM Modulares - Landing Page JavaScript
- * Funcionalidad para interactividad, animaciones y formulario de contacto
+ * VM Modulares - Bootstrap Enhanced Landing Page JavaScript
+ * Funcionalidad para interactividad, animaciones y formulario de contacto con Bootstrap 5
  */
 
 // ===== CONFIGURACIÓN GLOBAL =====
@@ -47,16 +47,6 @@ class Utils {
         };
     }
 
-    static isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    }
-
     static smoothScrollTo(target, duration = 1000) {
         const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
         if (!targetElement) return;
@@ -83,159 +73,84 @@ class Utils {
 
         requestAnimationFrame(animation);
     }
+
+    static showToast(message, type = 'info') {
+        // Crear toast usando Bootstrap
+        const toastContainer = document.querySelector('.toast-container') || this.createToastContainer();
+        
+        const toastId = 'toast-' + Date.now();
+        const bgClass = {
+            'success': 'bg-success',
+            'error': 'bg-danger',
+            'warning': 'bg-warning',
+            'info': 'bg-info'
+        }[type] || 'bg-info';
+
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        ${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 5000
+        });
+        
+        toast.show();
+        
+        // Limpiar el toast después de que se oculte
+        toastElement.addEventListener('hidden.bs.toast', () => {
+            toastElement.remove();
+        });
+    }
+
+    static createToastContainer() {
+        const container = document.createElement('div');
+        container.className = 'toast-container position-fixed top-0 end-0 p-3';
+        container.style.zIndex = '1055';
+        document.body.appendChild(container);
+        return container;
+    }
 }
 
-// ===== NAVEGACIÓN =====
-class Navigation {
+// ===== NAVEGACIÓN BOOTSTRAP =====
+class BootstrapNavigation {
     constructor() {
-        this.header = document.querySelector('.header');
-        this.navToggle = document.querySelector('.mobile-nav-toggle');
-        this.navMenu = document.querySelector('.nav-links');
-        this.navLinks = document.querySelectorAll('.nav-links a');
-        this.dropdowns = document.querySelectorAll('.dropdown');
+        this.navbar = document.querySelector('.navbar');
+        this.navLinks = document.querySelectorAll('.nav-link');
+        this.offcanvas = document.querySelector('#offcanvasNavbar');
         
         this.init();
     }
 
     init() {
         this.setupScrollEffect();
-        this.setupMobileMenu();
         this.setupSmoothScrolling();
-        this.setupDropdowns();
         this.setupActiveSection();
+        this.setupOffcanvasClose();
     }
 
     setupScrollEffect() {
         const handleScroll = Utils.throttle(() => {
             if (window.scrollY > 100) {
-                this.header.style.background = 'rgba(255, 255, 255, 0.98)';
-                this.header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                this.navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                this.navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
             } else {
-                this.header.style.background = 'rgba(255, 255, 255, 0.95)';
-                this.header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                this.navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                this.navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
             }
         }, 10);
 
         window.addEventListener('scroll', handleScroll);
-    }
-
-    setupMobileMenu() {
-        if (!this.navToggle || !this.navMenu) return;
-
-        // Variables para controlar el estado del menú
-        this.isMenuOpen = false;
-        this.isMobile = window.innerWidth <= 768;
-
-        // Toggle del menú móvil
-        this.navToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.toggleMobileMenu();
-        });
-
-        // Manejo de enlaces en móvil
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                // Si es un enlace de dropdown en móvil, manejar diferente
-                if (this.isMobile && link.closest('.dropdown')) {
-                    e.preventDefault();
-                    this.toggleMobileDropdown(link.closest('.dropdown'));
-                } else if (link.getAttribute('href')?.startsWith('#')) {
-                    // Cerrar menú solo para enlaces de navegación
-                    this.closeMobileMenu();
-                }
-            });
-        });
-
-        // Cerrar menú al hacer clic fuera
-        document.addEventListener('click', (e) => {
-            if (this.isMenuOpen && !this.navMenu.contains(e.target) && !this.navToggle.contains(e.target)) {
-                this.closeMobileMenu();
-            }
-        });
-
-        // Cerrar menú con tecla Escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.isMenuOpen) {
-                this.closeMobileMenu();
-            }
-        });
-
-        // Manejar cambios de tamaño de ventana
-        window.addEventListener('resize', Utils.debounce(() => {
-            const wasMobile = this.isMobile;
-            this.isMobile = window.innerWidth <= 768;
-            
-            if (wasMobile && !this.isMobile) {
-                // Cambió de móvil a desktop
-                this.closeMobileMenu();
-                this.resetDropdowns();
-            }
-        }, 250));
-    }
-
-    toggleMobileMenu() {
-        this.isMenuOpen = !this.isMenuOpen;
-        this.navMenu.classList.toggle('mobile-active', this.isMenuOpen);
-        this.navToggle.classList.toggle('active', this.isMenuOpen);
-        
-        // Cambiar icono del botón con animación
-        const icon = this.navToggle.querySelector('i');
-        icon.style.transform = 'rotate(180deg)';
-        
-        setTimeout(() => {
-            icon.className = this.isMenuOpen ? 'fas fa-times' : 'fas fa-bars';
-            icon.style.transform = 'rotate(0deg)';
-        }, 150);
-
-        // Prevenir scroll del body cuando el menú está abierto
-        document.body.style.overflow = this.isMenuOpen ? 'hidden' : '';
-
-        // Agregar clase al header para estilos adicionales
-        this.header.classList.toggle('menu-open', this.isMenuOpen);
-    }
-
-    closeMobileMenu() {
-        if (!this.isMenuOpen) return;
-        
-        this.isMenuOpen = false;
-        this.navMenu.classList.remove('mobile-active');
-        this.navToggle.classList.remove('active');
-        this.header.classList.remove('menu-open');
-        
-        const icon = this.navToggle.querySelector('i');
-        icon.className = 'fas fa-bars';
-        
-        document.body.style.overflow = '';
-        this.resetDropdowns();
-    }
-
-    toggleMobileDropdown(dropdown) {
-        const menu = dropdown.querySelector('.dropdown-menu');
-        const isOpen = dropdown.classList.contains('mobile-dropdown-open');
-        
-        // Cerrar otros dropdowns abiertos
-        this.dropdowns.forEach(d => {
-            if (d !== dropdown) {
-                d.classList.remove('mobile-dropdown-open');
-            }
-        });
-        
-        // Toggle del dropdown actual
-        dropdown.classList.toggle('mobile-dropdown-open', !isOpen);
-        
-        if (menu) {
-            menu.style.maxHeight = isOpen ? '0' : menu.scrollHeight + 'px';
-        }
-    }
-
-    resetDropdowns() {
-        this.dropdowns.forEach(dropdown => {
-            dropdown.classList.remove('mobile-dropdown-open');
-            const menu = dropdown.querySelector('.dropdown-menu');
-            if (menu) {
-                menu.style.maxHeight = '';
-            }
-        });
     }
 
     setupSmoothScrolling() {
@@ -245,37 +160,15 @@ class Navigation {
                 if (href && href.startsWith('#')) {
                     e.preventDefault();
                     Utils.smoothScrollTo(href);
+                    
+                    // Cerrar offcanvas si está abierto
+                    if (this.offcanvas) {
+                        const bsOffcanvas = bootstrap.Offcanvas.getInstance(this.offcanvas);
+                        if (bsOffcanvas) {
+                            bsOffcanvas.hide();
+                        }
+                    }
                 }
-            });
-        });
-    }
-
-    setupDropdowns() {
-        this.dropdowns.forEach(dropdown => {
-            const menu = dropdown.querySelector('.dropdown-menu');
-            if (!menu) return;
-
-            let timeout;
-
-            dropdown.addEventListener('mouseenter', () => {
-                clearTimeout(timeout);
-                menu.style.display = 'grid';
-                setTimeout(() => {
-                    menu.style.opacity = '1';
-                    menu.style.visibility = 'visible';
-                    menu.style.transform = 'translateX(-50%) translateY(10px)';
-                }, 10);
-            });
-
-            dropdown.addEventListener('mouseleave', () => {
-                timeout = setTimeout(() => {
-                    menu.style.opacity = '0';
-                    menu.style.visibility = 'hidden';
-                    menu.style.transform = 'translateX(-50%) translateY(0)';
-                    setTimeout(() => {
-                        menu.style.display = 'none';
-                    }, 300);
-                }, 100);
             });
         });
     }
@@ -306,128 +199,27 @@ class Navigation {
 
         sections.forEach(section => observer.observe(section));
     }
-}
 
-// ===== ANIMACIONES =====
-class Animations {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        this.setupScrollAnimations();
-        this.setupCounterAnimations();
-        this.setupParallaxEffect();
-        this.setupHoverEffects();
-    }
-
-    setupScrollAnimations() {
-        const animatedElements = document.querySelectorAll(
-            '.section-header, .product-card, .contact-item, .stat-item, .about-text'
-        );
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    entry.target.classList.add('animated');
+    setupOffcanvasClose() {
+        // Cerrar offcanvas al hacer clic en enlaces con data-bs-dismiss
+        const dismissLinks = document.querySelectorAll('[data-bs-dismiss="offcanvas"]');
+        dismissLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (this.offcanvas) {
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(this.offcanvas);
+                    if (bsOffcanvas) {
+                        bsOffcanvas.hide();
+                    }
                 }
-            });
-        }, CONFIG.animations.observerOptions);
-
-        animatedElements.forEach((el, index) => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
-            observer.observe(el);
-        });
-    }
-
-    setupCounterAnimations() {
-        const counters = document.querySelectorAll('.stat-number');
-        
-        const animateCounter = (counter) => {
-            const target = parseInt(counter.textContent.replace(/[^0-9]/g, ''));
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-
-            const updateCounter = () => {
-                current += step;
-                if (current < target) {
-                    counter.textContent = Math.floor(current) + '+';
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.textContent = target + '+';
-                }
-            };
-
-            updateCounter();
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
-                    entry.target.classList.add('counted');
-                    animateCounter(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        counters.forEach(counter => observer.observe(counter));
-    }
-
-    setupParallaxEffect() {
-        const heroBackground = document.querySelector('.hero-background');
-        if (!heroBackground) return;
-
-        const handleScroll = Utils.throttle(() => {
-            const scrolled = window.pageYOffset;
-            const rate = scrolled * -0.5;
-            heroBackground.style.transform = `translateY(${rate}px)`;
-        }, 10);
-
-        window.addEventListener('scroll', handleScroll);
-    }
-
-    setupHoverEffects() {
-        // Efecto hover para tarjetas de productos
-        const productCards = document.querySelectorAll('.product-card');
-        productCards.forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px) scale(1.02)';
-            });
-
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0) scale(1)';
-            });
-        });
-
-        // Efecto hover para botones
-        const buttons = document.querySelectorAll('.btn');
-        buttons.forEach(btn => {
-            btn.addEventListener('mouseenter', () => {
-                btn.style.transform = 'translateY(-2px)';
-            });
-
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'translateY(0)';
             });
         });
     }
 }
 
-// ===== FORMULARIO DE CONTACTO =====
-class ContactForm {
+// ===== FORMULARIO DE CONTACTO BOOTSTRAP =====
+class BootstrapContactForm {
     constructor() {
         this.form = document.getElementById('contact-form');
-        this.nameField = document.getElementById('nombre');
-        this.emailField = document.getElementById('email');
-        this.phoneField = document.getElementById('telefono');
-        this.categoryField = document.getElementById('categoria');
-        this.messageField = document.getElementById('mensaje');
-        this.termsCheckbox = document.getElementById('acepto-terminos');
         this.submitButton = this.form?.querySelector('button[type="submit"]');
         
         if (this.form) {
@@ -436,140 +228,66 @@ class ContactForm {
     }
 
     init() {
-        if (!this.form) return;
-        
-        this.setupFormValidation();
+        this.setupBootstrapValidation();
         this.setupFormSubmission();
         this.setupFieldInteractions();
     }
 
-    setupFormValidation() {
-        const fields = this.form.querySelectorAll('input, select, textarea');
-        
-        fields.forEach(field => {
-            field.addEventListener('blur', () => this.validateField(field));
-            field.addEventListener('input', () => this.clearFieldError(field));
+    setupBootstrapValidation() {
+        // Usar validación nativa de Bootstrap
+        this.form.addEventListener('submit', (e) => {
+            if (!this.form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                Utils.showToast('Por favor, completa todos los campos requeridos correctamente.', 'error');
+            }
+            this.form.classList.add('was-validated');
+        });
+
+        // Validación en tiempo real
+        const inputs = this.form.querySelectorAll('.form-control, .form-select');
+        inputs.forEach(input => {
+            input.addEventListener('blur', () => {
+                this.validateField(input);
+            });
+            
+            input.addEventListener('input', () => {
+                if (input.classList.contains('is-invalid')) {
+                    this.validateField(input);
+                }
+            });
         });
     }
 
     validateField(field) {
-        const value = field.value.trim();
-        const fieldName = field.name;
-        let isValid = true;
-        let errorMessage = '';
-
-        // Limpiar errores previos
-        this.clearFieldError(field);
-
-        // Validaciones específicas
-        switch (fieldName) {
-            case 'nombre':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'El nombre es requerido';
-                } else if (value.length < 2) {
-                    isValid = false;
-                    errorMessage = 'El nombre debe tener al menos 2 caracteres';
-                }
-                break;
-
-            case 'email':
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'El email es requerido';
-                } else if (!emailRegex.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Ingresa un email válido';
-                }
-                break;
-
-            case 'telefono':
-                const phoneRegex = /^[+]?[0-9\s\-\(\)]{10,}$/;
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'El teléfono es requerido';
-                } else if (!phoneRegex.test(value)) {
-                    isValid = false;
-                    errorMessage = 'Ingresa un teléfono válido';
-                }
-                break;
-
-            case 'mensaje':
-                if (!value) {
-                    isValid = false;
-                    errorMessage = 'El mensaje es requerido';
-                } else if (value.length < 10) {
-                    isValid = false;
-                    errorMessage = 'El mensaje debe tener al menos 10 caracteres';
-                }
-                break;
+        const isValid = field.checkValidity();
+        
+        if (isValid) {
+            field.classList.remove('is-invalid');
+            field.classList.add('is-valid');
+        } else {
+            field.classList.remove('is-valid');
+            field.classList.add('is-invalid');
         }
-
-        if (!isValid) {
-            this.showFieldError(field, errorMessage);
-        }
-
+        
         return isValid;
-    }
-
-    showFieldError(field, message) {
-        field.classList.add('error');
-        
-        // Remover mensaje de error previo
-        const existingError = field.parentNode.querySelector('.error-message');
-        if (existingError) {
-            existingError.remove();
-        }
-
-        // Crear nuevo mensaje de error
-        const errorElement = document.createElement('span');
-        errorElement.className = 'error-message';
-        errorElement.textContent = message;
-        errorElement.style.color = '#e74c3c';
-        errorElement.style.fontSize = '14px';
-        errorElement.style.marginTop = '5px';
-        errorElement.style.display = 'block';
-        
-        field.parentNode.appendChild(errorElement);
-    }
-
-    clearFieldError(field) {
-        field.classList.remove('error');
-        const errorMessage = field.parentNode.querySelector('.error-message');
-        if (errorMessage) {
-            errorMessage.remove();
-        }
     }
 
     setupFormSubmission() {
         this.form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            // Validar todos los campos
-            const fields = this.form.querySelectorAll('input[required], select[required], textarea[required]');
-            let isFormValid = true;
-
-            fields.forEach(field => {
-                if (!this.validateField(field)) {
-                    isFormValid = false;
-                }
-            });
+            if (!this.form.checkValidity()) {
+                return;
+            }
 
             // Validar captcha
             const captchaField = this.form.querySelector('input[name="captcha_1"]');
             if (captchaField && !captchaField.value.trim()) {
-                isFormValid = false;
-                this.showNotification('El código de verificación es requerido', 'error');
+                Utils.showToast('El código de verificación es requerido', 'error');
                 return;
             }
 
-            if (!isFormValid) {
-                this.showNotification('Por favor, corrige los errores en el formulario', 'error');
-                return;
-            }
-
-            // Enviar formulario
             await this.submitForm();
         });
     }
@@ -577,7 +295,6 @@ class ContactForm {
     async submitForm() {
         const formData = new FormData(this.form);
         
-        // Mostrar estado de carga
         this.setLoadingState(true);
 
         try {
@@ -592,15 +309,16 @@ class ContactForm {
             const result = await response.json();
             
             if (response.ok && result.success) {
-                this.showNotification(result.message || CONFIG.form.successMessage, 'success');
+                Utils.showToast(result.message || CONFIG.form.successMessage, 'success');
                 this.form.reset();
+                this.form.classList.remove('was-validated');
                 this.showWhatsAppOption(formData);
             } else {
-                this.showNotification(result.message || CONFIG.form.errorMessage, 'error');
+                Utils.showToast(result.message || CONFIG.form.errorMessage, 'error');
             }
         } catch (error) {
             console.error('Error al enviar formulario:', error);
-            this.showNotification(CONFIG.form.errorMessage, 'error');
+            Utils.showToast(CONFIG.form.errorMessage, 'error');
         } finally {
             this.setLoadingState(false);
         }
@@ -614,14 +332,14 @@ class ContactForm {
 
         if (loading) {
             this.submitButton.disabled = true;
-            this.submitButton.classList.add('loading');
-            if (btnText) btnText.style.display = 'none';
-            if (btnLoading) btnLoading.style.display = 'inline';
+            this.submitButton.classList.add('btn-loading');
+            if (btnText) btnText.classList.add('d-none');
+            if (btnLoading) btnLoading.classList.remove('d-none');
         } else {
             this.submitButton.disabled = false;
-            this.submitButton.classList.remove('loading');
-            if (btnText) btnText.style.display = 'inline';
-            if (btnLoading) btnLoading.style.display = 'none';
+            this.submitButton.classList.remove('btn-loading');
+            if (btnText) btnText.classList.remove('d-none');
+            if (btnLoading) btnLoading.classList.add('d-none');
         }
     }
 
@@ -645,99 +363,50 @@ class ContactForm {
 
         const whatsappUrl = `https://wa.me/${CONFIG.whatsapp.number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(whatsappMessage)}`;
         
-        // Mostrar notificación con opción de WhatsApp
-        this.showWhatsAppNotification(whatsappUrl);
+        // Mostrar modal de WhatsApp usando Bootstrap
+        this.showWhatsAppModal(whatsappUrl);
     }
 
-    showWhatsAppNotification(whatsappUrl) {
-        // Remover notificación existente
-        const existingNotification = document.querySelector('.whatsapp-notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
-
-        // Crear notificación de WhatsApp
-        const notification = document.createElement('div');
-        notification.className = 'whatsapp-notification';
-        notification.innerHTML = `
-            <div class="whatsapp-notification-content">
-                <div class="whatsapp-notification-text">
-                    <i class="fab fa-whatsapp"></i>
-                    <span>¿Quieres continuar la conversación por WhatsApp?</span>
-                </div>
-                <div class="whatsapp-notification-buttons">
-                    <button class="whatsapp-btn-yes">Sí, abrir WhatsApp</button>
-                    <button class="whatsapp-btn-no">No, gracias</button>
+    showWhatsAppModal(whatsappUrl) {
+        const modalHTML = `
+            <div class="modal fade" id="whatsappModal" tabindex="-1" aria-labelledby="whatsappModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title" id="whatsappModalLabel">
+                                <i class="fab fa-whatsapp me-2"></i>Continuar por WhatsApp
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p class="mb-4">¿Te gustaría continuar la conversación por WhatsApp para recibir atención personalizada?</p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <a href="${whatsappUrl}" target="_blank" class="btn btn-success btn-lg me-md-2">
+                                    <i class="fab fa-whatsapp me-2"></i>Sí, abrir WhatsApp
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal">No, gracias</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
 
-        // Estilos de la notificación
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '10001',
-            padding: '20px',
-            borderRadius: '12px',
-            backgroundColor: '#25D366',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            maxWidth: '350px',
-            boxShadow: '0 4px 20px rgba(37, 211, 102, 0.3)',
-            transform: 'translateX(100%)',
-            transition: 'transform 0.3s ease'
+        // Remover modal existente si existe
+        const existingModal = document.getElementById('whatsappModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        const modal = new bootstrap.Modal(document.getElementById('whatsappModal'));
+        modal.show();
+
+        // Limpiar modal después de cerrarlo
+        document.getElementById('whatsappModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
         });
-
-        document.body.appendChild(notification);
-
-        // Animar entrada
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-
-        // Configurar botones
-        const yesBtn = notification.querySelector('.whatsapp-btn-yes');
-        const noBtn = notification.querySelector('.whatsapp-btn-no');
-
-        // Estilos de botones
-        [yesBtn, noBtn].forEach(btn => {
-            Object.assign(btn.style, {
-                padding: '8px 16px',
-                margin: '5px',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontSize: '12px',
-                fontWeight: '500'
-            });
-        });
-
-        Object.assign(yesBtn.style, {
-            backgroundColor: 'white',
-            color: '#25D366'
-        });
-
-        Object.assign(noBtn.style, {
-            backgroundColor: 'rgba(255, 255, 255, 0.2)',
-            color: 'white'
-        });
-
-        const closeNotification = () => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        };
-
-        yesBtn.addEventListener('click', () => {
-            window.open(whatsappUrl, '_blank');
-            closeNotification();
-        });
-
-        noBtn.addEventListener('click', closeNotification);
-
-        // Auto-cerrar después de 10 segundos
-        setTimeout(closeNotification, 10000);
     }
 
     setupFieldInteractions() {
@@ -758,390 +427,17 @@ class ContactForm {
             });
         }
     }
-
-    showNotification(message, type = 'info') {
-        // Remover notificación existente
-        const existingNotification = document.querySelector('.notification');
-        if (existingNotification) {
-            existingNotification.remove();
-        }
-
-        // Crear nueva notificación
-        const notification = document.createElement('div');
-        notification.className = `notification notification-${type}`;
-        notification.innerHTML = `
-            <div class="notification-content">
-                <span class="notification-message">${message}</span>
-                <button class="notification-close">&times;</button>
-            </div>
-        `;
-
-        // Estilos de la notificación
-        Object.assign(notification.style, {
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            zIndex: '10000',
-            padding: '15px 20px',
-            borderRadius: '8px',
-            color: 'white',
-            fontSize: '14px',
-            fontWeight: '500',
-            maxWidth: '400px',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
-            transform: 'translateX(100%)',
-            transition: 'transform 0.3s ease',
-            backgroundColor: type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'
-        });
-
-        document.body.appendChild(notification);
-
-        // Animar entrada
-        setTimeout(() => {
-            notification.style.transform = 'translateX(0)';
-        }, 100);
-
-        // Configurar cierre
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.style.background = 'none';
-        closeBtn.style.border = 'none';
-        closeBtn.style.color = 'white';
-        closeBtn.style.fontSize = '18px';
-        closeBtn.style.cursor = 'pointer';
-        closeBtn.style.marginLeft = '10px';
-
-        const closeNotification = () => {
-            notification.style.transform = 'translateX(100%)';
-            setTimeout(() => notification.remove(), 300);
-        };
-
-        closeBtn.addEventListener('click', closeNotification);
-
-        // Auto-cerrar después de 5 segundos
-        setTimeout(closeNotification, 5000);
-    }
 }
 
-// ===== WHATSAPP INTEGRATION =====
-class WhatsAppIntegration {
-    constructor() {
-        this.init();
-    }
-
-    init() {
-        this.setupWhatsAppButton();
-        this.setupProductInquiry();
-    }
-
-    setupWhatsAppButton() {
-        const whatsappBtn = document.querySelector('.whatsapp-link');
-        if (!whatsappBtn) return;
-
-        whatsappBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            
-            const message = CONFIG.whatsapp.message;
-            const url = `https://wa.me/${CONFIG.whatsapp.number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
-            
-            window.open(url, '_blank');
-        });
-    }
-
-    setupProductInquiry() {
-        const productCards = document.querySelectorAll('.product-card');
-        
-        productCards.forEach(card => {
-            const inquiryBtn = document.createElement('button');
-            inquiryBtn.className = 'btn btn-primary btn-inquiry';
-            inquiryBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Consultar';
-            inquiryBtn.style.cssText = `
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            `;
-
-            const overlayButtons = card.querySelector('.overlay-buttons');
-            if (overlayButtons) {
-                overlayButtons.appendChild(inquiryBtn);
-            }
-
-            const verFotosBtn = card.querySelector('.btn-ver-fotos');
-            
-            card.addEventListener('mouseenter', () => {
-                inquiryBtn.style.opacity = '1';
-                if (verFotosBtn) {
-                    verFotosBtn.style.opacity = '1';
-                }
-            });
-
-            card.addEventListener('mouseleave', () => {
-                inquiryBtn.style.opacity = '0';
-                if (verFotosBtn) {
-                    verFotosBtn.style.opacity = '0';
-                }
-            });
-
-            inquiryBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                
-                const productName = card.querySelector('h4').textContent;
-                const message = `Hola, me interesa conocer más sobre: ${productName}`;
-                const url = `https://wa.me/${CONFIG.whatsapp.number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
-                
-                window.open(url, '_blank');
-            });
-        });
-    }
-}
-
-// ===== BACK TO TOP =====
-class BackToTop {
-    constructor() {
-        this.button = document.querySelector('.back-to-top');
-        this.init();
-    }
-
-    init() {
-        if (!this.button) return;
-
-        this.setupScrollVisibility();
-        this.setupClickHandler();
-    }
-
-    setupScrollVisibility() {
-        const handleScroll = Utils.throttle(() => {
-            if (window.scrollY > 300) {
-                this.button.classList.add('show');
-            } else {
-                this.button.classList.remove('show');
-            }
-        }, 100);
-
-        window.addEventListener('scroll', handleScroll);
-    }
-
-    setupClickHandler() {
-        this.button.addEventListener('click', () => {
-            Utils.smoothScrollTo('body', 800);
-        });
-    }
-}
-
-// ===== PERFORMANCE OPTIMIZATION =====
-class PerformanceOptimizer {
-    constructor() {
-        this.isMobile = window.innerWidth <= 768;
-        this.isSlowDevice = this.detectSlowDevice();
-        this.init();
-    }
-
-    init() {
-        this.lazyLoadImages();
-        this.preloadCriticalResources();
-        this.optimizeForMobile();
-        this.setupPerformanceMonitoring();
-    }
-
-    detectSlowDevice() {
-        // Detectar dispositivos lentos basado en hardware
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const slowConnection = connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g');
-        const lowMemory = navigator.deviceMemory && navigator.deviceMemory < 4;
-        const oldDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
-        
-        return slowConnection || lowMemory || oldDevice;
-    }
-
-    lazyLoadImages() {
-        const images = document.querySelectorAll('img[data-src]');
-        
-        const observerOptions = {
-            rootMargin: this.isMobile ? '50px' : '100px',
-            threshold: 0.1
-        };
-        
-        const imageObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    this.loadImageOptimized(img);
-                    imageObserver.unobserve(img);
-                }
-            });
-        }, observerOptions);
-
-        images.forEach(img => {
-            img.classList.add('lazy');
-            imageObserver.observe(img);
-        });
-    }
-
-    loadImageOptimized(img) {
-        const src = img.dataset.src;
-        if (!src) return;
-        
-        // Crear imagen temporal para precargar
-        const tempImg = new Image();
-        
-        tempImg.onload = () => {
-            img.src = src;
-            img.classList.remove('lazy');
-            img.classList.add('loaded');
-        };
-        
-        tempImg.onerror = () => {
-            img.classList.add('error');
-        };
-        
-        // Para móviles, usar versiones más pequeñas si están disponibles
-        if (this.isMobile && img.dataset.srcMobile) {
-            tempImg.src = img.dataset.srcMobile;
-        } else {
-            tempImg.src = src;
-        }
-    }
-
-    optimizeForMobile() {
-        if (!this.isMobile) return;
-        
-        // Reducir animaciones en dispositivos lentos
-        if (this.isSlowDevice) {
-            document.documentElement.style.setProperty('--animation-duration', '0.1s');
-            document.documentElement.classList.add('reduce-motion');
-        }
-        
-        // Optimizar scroll en móviles
-        this.optimizeScrollPerformance();
-        
-        // Reducir calidad de imágenes en conexiones lentas
-        this.optimizeImageQuality();
-    }
-
-    optimizeScrollPerformance() {
-        let ticking = false;
-        
-        const optimizedScrollHandler = () => {
-            if (!ticking) {
-                requestAnimationFrame(() => {
-                    // Lógica de scroll optimizada
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        };
-        
-        // Usar scroll pasivo para mejor rendimiento
-        window.addEventListener('scroll', optimizedScrollHandler, { passive: true });
-    }
-
-    optimizeImageQuality() {
-        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        
-        if (connection && (connection.effectiveType === 'slow-2g' || connection.effectiveType === '2g')) {
-            // Reducir calidad de imágenes para conexiones lentas
-            const images = document.querySelectorAll('img');
-            images.forEach(img => {
-                if (img.dataset.srcLowQuality) {
-                    img.dataset.src = img.dataset.srcLowQuality;
-                }
-            });
-        }
-    }
-
-    setupPerformanceMonitoring() {
-        // Monitorear métricas de rendimiento
-        if ('PerformanceObserver' in window) {
-            const observer = new PerformanceObserver((list) => {
-                const entries = list.getEntries();
-                entries.forEach(entry => {
-                    if (entry.entryType === 'largest-contentful-paint') {
-                        // Optimizar si LCP es muy alto
-                        if (entry.startTime > 2500) {
-                            this.enableAggressiveOptimizations();
-                        }
-                    }
-                    if (entry.entryType === 'first-input') {
-                        // Monitorear First Input Delay
-                        if (entry.processingStart - entry.startTime > 100) {
-                            this.enableAggressiveOptimizations();
-                        }
-                    }
-                });
-            });
-            
-            // Observar métricas de rendimiento por separado para mejor compatibilidad
-            try {
-                observer.observe({ entryTypes: ['largest-contentful-paint'] });
-            } catch (e) {
-                console.warn('LCP observation not supported:', e);
-            }
-            
-            try {
-                observer.observe({ entryTypes: ['first-input'] });
-            } catch (e) {
-                console.warn('First Input observation not supported:', e);
-            }
-        }
-    }
-
-    enableAggressiveOptimizations() {
-        // Activar optimizaciones agresivas para dispositivos muy lentos
-        document.documentElement.classList.add('aggressive-optimizations');
-        
-        // Deshabilitar animaciones no críticas
-        const nonCriticalAnimations = document.querySelectorAll('.animate-on-scroll:not(.critical)');
-        nonCriticalAnimations.forEach(el => {
-            el.classList.remove('animate-on-scroll');
-        });
-    }
-
-    preloadCriticalResources() {
-        // Precargar fuentes críticas solo si no es un dispositivo lento
-        if (!this.isSlowDevice) {
-            const fontLinks = [
-                'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-                'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap'
-            ];
-
-            fontLinks.forEach(href => {
-                const link = document.createElement('link');
-                link.rel = 'preload';
-                link.as = 'style';
-                link.href = href;
-                document.head.appendChild(link);
-            });
-        }
-    }
-
-    // Método para optimizar imágenes dinámicamente
-    optimizeImageLoading() {
-        const images = document.querySelectorAll('img:not([data-optimized])');
-        
-        images.forEach(img => {
-            // Añadir loading="lazy" nativo del navegador
-            img.loading = 'lazy';
-            
-            // Añadir decode="async" para mejor rendimiento
-            img.decoding = 'async';
-            
-            // Marcar como optimizada
-            img.dataset.optimized = 'true';
-        });
-    }
-}
-
-
-
-// ===== MODAL FOTOS =====
-class FotosModal {
+// ===== MODAL FOTOS BOOTSTRAP =====
+class BootstrapFotosModal {
     constructor() {
         this.modal = document.getElementById('fotosModal');
         this.modalTitle = document.getElementById('modalTitle');
         this.fotosContainer = document.getElementById('fotosContainer');
         this.loadingSpinner = document.getElementById('loadingSpinner');
         this.errorMessage = document.getElementById('errorMessage');
-        this.closeBtn = document.querySelector('.modal-close');
         
-        // Nuevas propiedades para navegación
         this.currentFotos = [];
         this.currentIndex = 0;
         this.currentLightbox = null;
@@ -1161,32 +457,11 @@ class FotosModal {
         // Event listeners for navbar product links
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('navbar-producto-link')) {
-                e.preventDefault(); // Prevent default anchor behavior
+                e.preventDefault();
                 const subcategoriaId = e.target.getAttribute('data-subcategoria-id');
                 if (subcategoriaId) {
                     this.loadSubcategoriaFotos(subcategoriaId);
                 }
-            }
-        });
-        
-        // Close modal events
-        if (this.closeBtn) {
-            this.closeBtn.addEventListener('click', () => this.closeModal());
-        }
-        
-        // Close modal when clicking outside
-        if (this.modal) {
-            this.modal.addEventListener('click', (e) => {
-                if (e.target === this.modal) {
-                    this.closeModal();
-                }
-            });
-        }
-        
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && this.modal && this.modal.style.display === 'block') {
-                this.closeModal();
             }
         });
     }
@@ -1194,7 +469,10 @@ class FotosModal {
     async loadSubcategoriaFotos(subcategoriaId) {
         if (!this.modal) return;
         
-        this.openModal();
+        // Mostrar modal usando Bootstrap
+        const bsModal = new bootstrap.Modal(this.modal);
+        bsModal.show();
+        
         this.showLoading();
         
         try {
@@ -1221,29 +499,29 @@ class FotosModal {
         this.hideLoading();
         this.hideError();
         
-        // Guardar fotos para navegación
         this.currentFotos = fotos;
         
-        // Update modal title
         if (this.modalTitle) {
             this.modalTitle.textContent = `Fotos de ${subcategoria.nombre}`;
         }
         
-        // Clear previous content
         if (this.fotosContainer) {
             this.fotosContainer.innerHTML = '';
         }
         
         if (fotos.length === 0) {
             this.fotosContainer.innerHTML = `
-                <div class="no-photos">
-                    <p>No hay fotos disponibles para esta subcategoría.</p>
+                <div class="col-12 text-center py-5">
+                    <div class="text-muted">
+                        <i class="fas fa-images fs-1 mb-3"></i>
+                        <h4>No hay fotos disponibles</h4>
+                        <p>No hay fotos disponibles para esta subcategoría.</p>
+                    </div>
                 </div>
             `;
             return;
         }
         
-        // Create photo grid
         fotos.forEach((foto, index) => {
             const fotoElement = this.createFotoElement(foto, index);
             this.fotosContainer.appendChild(fotoElement);
@@ -1252,15 +530,17 @@ class FotosModal {
     
     createFotoElement(foto, index) {
         const fotoDiv = document.createElement('div');
-        fotoDiv.className = 'foto-item';
+        fotoDiv.className = 'col-lg-4 col-md-6 mb-3';
         
         fotoDiv.innerHTML = `
-            <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" loading="lazy">
-            ${foto.descripcion ? `
-                <div class="foto-info">
-                    <p>${foto.descripcion}</p>
-                </div>
-            ` : ''}
+            <div class="card border-0 shadow-sm h-100 foto-item" style="cursor: pointer;">
+                <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" class="card-img-top" style="height: 200px; object-fit: cover;" loading="lazy">
+                ${foto.descripcion ? `
+                    <div class="card-body p-2">
+                        <small class="text-muted">${foto.descripcion}</small>
+                    </div>
+                ` : ''}
+            </div>
         `;
         
         // Add click event to view full image with navigation
@@ -1277,87 +557,46 @@ class FotosModal {
     }
     
     createLightboxWithNavigation() {
-        // Remove existing lightbox if any
         if (this.currentLightbox) {
             document.body.removeChild(this.currentLightbox);
         }
         
         const foto = this.currentFotos[this.currentIndex];
         
-        // Create lightbox container
         const lightbox = document.createElement('div');
-        lightbox.className = 'lightbox-navigation';
+        lightbox.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
+        lightbox.style.cssText = 'background: rgba(0, 0, 0, 0.9); z-index: 2000; backdrop-filter: blur(5px);';
+        
         lightbox.innerHTML = `
-            <div class="lightbox-content">
-                <button class="lightbox-close">&times;</button>
-                <button class="lightbox-prev" ${this.currentFotos.length <= 1 ? 'style="display: none;"' : ''}>
+            <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 20px; right: 20px; width: 50px; height: 50px; z-index: 10;" onclick="this.closest('.position-fixed').remove(); document.body.style.overflow = 'auto';">
+                <i class="fas fa-times"></i>
+            </button>
+            ${this.currentFotos.length > 1 ? `
+                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; left: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigatePrevious()">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-                <div class="lightbox-image-container">
-                    <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" class="lightbox-image">
-                    ${foto.descripcion ? `<div class="lightbox-description">${foto.descripcion}</div>` : ''}
-                </div>
-                <button class="lightbox-next" ${this.currentFotos.length <= 1 ? 'style="display: none;"' : ''}>
+                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; right: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigateNext()">
                     <i class="fas fa-chevron-right"></i>
                 </button>
-                <div class="lightbox-counter">${this.currentIndex + 1} / ${this.currentFotos.length}</div>
+            ` : ''}
+            <div class="text-center">
+                <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" class="img-fluid rounded" style="max-height: 80vh; max-width: 90vw;">
+                ${foto.descripcion ? `<div class="mt-3 text-white bg-dark bg-opacity-75 rounded px-3 py-2 d-inline-block">${foto.descripcion}</div>` : ''}
+                ${this.currentFotos.length > 1 ? `<div class="mt-2 text-white bg-dark bg-opacity-75 rounded px-2 py-1 d-inline-block small">${this.currentIndex + 1} / ${this.currentFotos.length}</div>` : ''}
             </div>
         `;
         
         this.currentLightbox = lightbox;
-        
-        // Add event listeners
-        this.setupLightboxEvents(lightbox);
-        
         document.body.appendChild(lightbox);
-        
-        // Prevent body scroll
         document.body.style.overflow = 'hidden';
-    }
-    
-    setupLightboxEvents(lightbox) {
-        const closeBtn = lightbox.querySelector('.lightbox-close');
-        const prevBtn = lightbox.querySelector('.lightbox-prev');
-        const nextBtn = lightbox.querySelector('.lightbox-next');
-        
-        // Close lightbox
-        const closeLightbox = () => {
-            if (this.currentLightbox) {
-                document.body.removeChild(this.currentLightbox);
-                this.currentLightbox = null;
-                document.body.style.overflow = 'auto';
-            }
-        };
-        
-        closeBtn.addEventListener('click', closeLightbox);
-        
-        // Close on background click
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
-        
-        // Navigation
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.navigatePrevious();
-            });
-        }
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.navigateNext();
-            });
-        }
         
         // Keyboard navigation
         const handleKeydown = (e) => {
             switch(e.key) {
                 case 'Escape':
-                    closeLightbox();
+                    lightbox.remove();
+                    document.body.style.overflow = 'auto';
+                    document.removeEventListener('keydown', handleKeydown);
                     break;
                 case 'ArrowLeft':
                     this.navigatePrevious();
@@ -1370,20 +609,12 @@ class FotosModal {
         
         document.addEventListener('keydown', handleKeydown);
         
-        // Remove keydown listener when lightbox is closed
-        const originalClose = closeLightbox;
-        const newClose = () => {
-            document.removeEventListener('keydown', handleKeydown);
-            originalClose();
-        };
-        
-        closeBtn.removeEventListener('click', closeLightbox);
-        closeBtn.addEventListener('click', newClose);
-        
-        lightbox.removeEventListener('click', closeLightbox);
+        // Close on background click
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
-                newClose();
+                lightbox.remove();
+                document.body.style.overflow = 'auto';
+                document.removeEventListener('keydown', handleKeydown);
             }
         });
     }
@@ -1406,54 +637,26 @@ class FotosModal {
         if (!this.currentLightbox) return;
         
         const foto = this.currentFotos[this.currentIndex];
-        const img = this.currentLightbox.querySelector('.lightbox-image');
-        const description = this.currentLightbox.querySelector('.lightbox-description');
-        const counter = this.currentLightbox.querySelector('.lightbox-counter');
+        const img = this.currentLightbox.querySelector('img');
+        const description = this.currentLightbox.querySelector('.bg-dark.bg-opacity-75');
+        const counter = this.currentLightbox.querySelector('.small');
         
-        // Update image with fade effect
         img.style.opacity = '0';
         
         setTimeout(() => {
             img.src = foto.imagen_url;
             img.alt = foto.descripcion || 'Foto de producto';
             
-            // Update description
-            if (description) {
-                if (foto.descripcion) {
-                    description.textContent = foto.descripcion;
-                    description.style.display = 'block';
-                } else {
-                    description.style.display = 'none';
-                }
-            } else if (foto.descripcion) {
-                // Create description if it doesn't exist
-                const newDescription = document.createElement('div');
-                newDescription.className = 'lightbox-description';
-                newDescription.textContent = foto.descripcion;
-                img.parentNode.appendChild(newDescription);
+            if (description && foto.descripcion) {
+                description.textContent = foto.descripcion;
             }
             
-            // Update counter
             if (counter) {
                 counter.textContent = `${this.currentIndex + 1} / ${this.currentFotos.length}`;
             }
             
             img.style.opacity = '1';
         }, 150);
-    }
-    
-    openModal() {
-        if (this.modal) {
-            this.modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-    }
-    
-    closeModal() {
-        if (this.modal) {
-            this.modal.style.display = 'none';
-            document.body.style.overflow = 'auto'; // Restore scrolling
-        }
     }
     
     showLoading() {
@@ -1473,7 +676,7 @@ class FotosModal {
             this.loadingSpinner.style.display = 'none';
         }
         if (this.fotosContainer) {
-            this.fotosContainer.style.display = 'grid';
+            this.fotosContainer.style.display = 'block';
         }
     }
     
@@ -1496,15 +699,14 @@ class FotosModal {
     }
 }
 
-// ===== PRODUCTOS MÓVILES =====
-class MobileProducts {
+// ===== PRODUCTOS BOOTSTRAP =====
+class BootstrapProducts {
     constructor() {
         this.init();
     }
 
     init() {
         this.setupCategoryFilter();
-        this.setupCategoryToggles();
         this.setupSubcategoryTabs();
         this.setupProductFiltering();
     }
@@ -1515,15 +717,20 @@ class MobileProducts {
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
                 // Remove active class from all buttons
-                filterButtons.forEach(btn => btn.classList.remove('active'));
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('active', 'btn-primary');
+                    btn.classList.add('btn-outline-primary');
+                });
+                
                 // Add active class to clicked button
-                button.classList.add('active');
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('active', 'btn-primary');
                 
                 const category = button.dataset.category;
                 this.filterByCategory(category);
                 
-                // Smooth scroll to products section only when user clicks
-                const productsSection = document.querySelector('.products');
+                // Smooth scroll to products section
+                const productsSection = document.querySelector('#productos');
                 if (productsSection) {
                     Utils.smoothScrollTo(productsSection, 800);
                 }
@@ -1531,28 +738,8 @@ class MobileProducts {
         });
     }
 
-    setupCategoryToggles() {
-        const toggleButtons = document.querySelectorAll('.mobile-category-toggle');
-        
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const categorySection = button.closest('.category-section');
-                const content = categorySection.querySelector('.category-content');
-                const isCollapsed = content.classList.contains('collapsed');
-                
-                if (isCollapsed) {
-                    content.classList.remove('collapsed');
-                    button.classList.add('active');
-                } else {
-                    content.classList.add('collapsed');
-                    button.classList.remove('active');
-                }
-            });
-        });
-    }
-
     setupSubcategoryTabs() {
-        const tabContainers = document.querySelectorAll('.subcategory-tabs');
+        const tabContainers = document.querySelectorAll('.d-flex.flex-wrap.justify-content-center.gap-2.mb-4');
         
         tabContainers.forEach(container => {
             const tabs = container.querySelectorAll('.subcategory-tab');
@@ -1560,11 +747,16 @@ class MobileProducts {
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
                     // Remove active class from all tabs in this container
-                    tabs.forEach(t => t.classList.remove('active'));
-                    // Add active class to clicked tab
-                    tab.classList.add('active');
+                    tabs.forEach(t => {
+                        t.classList.remove('btn-primary');
+                        t.classList.add('btn-outline-secondary');
+                    });
                     
-                    const subcategory = tab.dataset.subcategory;
+                    // Add active class to clicked tab
+                    tab.classList.remove('btn-outline-secondary');
+                    tab.classList.add('btn-primary');
+                    
+                    const subcategory = tab.dataset.subcategoria;
                     const categorySection = container.closest('.category-section');
                     this.filterBySubcategory(categorySection, subcategory);
                 });
@@ -1573,25 +765,19 @@ class MobileProducts {
     }
 
     setupProductFiltering() {
-        // Initialize with first category active if exists
-        const firstFilterBtn = document.querySelector('.category-filter-btn');
-        if (firstFilterBtn) {
-            firstFilterBtn.classList.add('active');
-            this.filterByCategory(firstFilterBtn.dataset.category);
-        }
+        // Show all products by default - no filter selected initially
+        this.filterByCategory('all');
         
         // Initialize subcategory tabs
-        const firstTabs = document.querySelectorAll('.subcategory-tabs .subcategory-tab:first-child');
+        const firstTabs = document.querySelectorAll('.subcategory-tab.btn-primary');
         firstTabs.forEach(tab => {
-            tab.classList.add('active');
-            const subcategory = tab.dataset.subcategory;
+            const subcategory = tab.dataset.subcategoria;
             const categorySection = tab.closest('.category-section');
             this.filterBySubcategory(categorySection, subcategory);
         });
     }
 
     filterByCategory(category) {
-        const categorySection = document.querySelector(`[data-category="${category}"]`);
         const allSections = document.querySelectorAll('.category-section');
         
         if (category === 'all') {
@@ -1600,7 +786,7 @@ class MobileProducts {
             });
         } else {
             allSections.forEach(section => {
-                if (section.dataset.category === category) {
+                if (section.dataset.categoryName === category) {
                     section.style.display = 'block';
                 } else {
                     section.style.display = 'none';
@@ -1614,52 +800,99 @@ class MobileProducts {
         
         if (subcategory === 'all') {
             productCards.forEach(card => {
-                card.classList.remove('hidden');
+                card.classList.remove('d-none');
             });
         } else {
             productCards.forEach(card => {
-                if (card.dataset.subcategory === subcategory) {
-                    card.classList.remove('hidden');
+                if (card.dataset.subcategoria === subcategory) {
+                    card.classList.remove('d-none');
                 } else {
-                    card.classList.add('hidden');
+                    card.classList.add('d-none');
                 }
             });
-        }
-        
-        // Update no products message
-        this.updateNoProductsMessage(categorySection);
-    }
-
-    updateNoProductsMessage(categorySection) {
-        const visibleCards = categorySection.querySelectorAll('.product-card:not(.hidden)');
-        const noProductsMsg = categorySection.querySelector('.no-products');
-        
-        if (visibleCards.length === 0) {
-            if (!noProductsMsg) {
-                const message = document.createElement('div');
-                message.className = 'no-products';
-                message.innerHTML = `
-                    <div class="no-products-content">
-                        <i class="fas fa-search"></i>
-                        <h4>No hay productos disponibles</h4>
-                        <p>No se encontraron productos en esta subcategoría.</p>
-                    </div>
-                `;
-                const grid = categorySection.querySelector('.products-grid');
-                grid.appendChild(message);
-            } else {
-                noProductsMsg.style.display = 'block';
-            }
-        } else {
-            if (noProductsMsg) {
-                noProductsMsg.style.display = 'none';
-            }
         }
     }
 }
 
-// ===== INICIALIZACIÓN =====
-class App {
+// ===== BACK TO TOP BOOTSTRAP =====
+class BootstrapBackToTop {
+    constructor() {
+        this.button = document.querySelector('#back-to-top');
+        this.init();
+    }
+
+    init() {
+        if (!this.button) return;
+
+        this.setupScrollVisibility();
+        this.setupClickHandler();
+    }
+
+    setupScrollVisibility() {
+        const handleScroll = Utils.throttle(() => {
+            if (window.scrollY > 300) {
+                this.button.classList.add('show');
+                this.button.style.opacity = '1';
+                this.button.style.visibility = 'visible';
+            } else {
+                this.button.classList.remove('show');
+                this.button.style.opacity = '0';
+                this.button.style.visibility = 'hidden';
+            }
+        }, 100);
+
+        window.addEventListener('scroll', handleScroll);
+    }
+
+    setupClickHandler() {
+        this.button.addEventListener('click', () => {
+            Utils.smoothScrollTo('body', 800);
+        });
+    }
+}
+
+// ===== WHATSAPP INTEGRATION BOOTSTRAP =====
+class BootstrapWhatsAppIntegration {
+    constructor() {
+        this.init();
+    }
+
+    init() {
+        this.setupWhatsAppButton();
+        this.setupProductInquiry();
+    }
+
+    setupWhatsAppButton() {
+        const whatsappBtn = document.querySelector('#whatsapp-float a');
+        if (!whatsappBtn) return;
+
+        whatsappBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const message = CONFIG.whatsapp.message;
+            const url = `https://wa.me/${CONFIG.whatsapp.number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+            
+            window.open(url, '_blank');
+        });
+    }
+
+    setupProductInquiry() {
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-cotizar')) {
+                e.stopPropagation();
+                
+                const productName = e.target.dataset.subcategoria || 'producto';
+                const message = `Hola, me interesa conocer más sobre: ${productName}`;
+                const url = `https://wa.me/${CONFIG.whatsapp.number.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(message)}`;
+                
+                window.open(url, '_blank');
+            }
+        });
+    }
+}
+
+// ===== INICIALIZACIÓN BOOTSTRAP =====
+class BootstrapApp {
     constructor() {
         this.components = {};
         this.init();
@@ -1690,36 +923,41 @@ class App {
                 console.log('AOS inicializado correctamente');
             }
 
-            // Inicializar componentes principales
-            this.components.navigation = new Navigation();
-            this.components.animations = new Animations();
-            this.components.contactForm = new ContactForm();
-            this.components.whatsapp = new WhatsAppIntegration();
-            this.components.backToTop = new BackToTop();
-            this.components.performance = new PerformanceOptimizer();
-            this.components.fotosModal = new FotosModal();
-            this.components.mobileProducts = new MobileProducts();
+            // Inicializar componentes Bootstrap
+            this.components.navigation = new BootstrapNavigation();
+            this.components.contactForm = new BootstrapContactForm();
+            this.components.fotosModal = new BootstrapFotosModal();
+            this.components.products = new BootstrapProducts();
+            this.components.backToTop = new BootstrapBackToTop();
+            this.components.whatsapp = new BootstrapWhatsAppIntegration();
 
             // Configurar eventos globales
             this.setupGlobalEvents();
 
-            // FAQ Accordion
-            const faqItems = document.querySelectorAll('.faq-item');
-            faqItems.forEach(item => {
-                const question = item.querySelector('.faq-question');
-                question.addEventListener('click', () => {
-                    const currentlyActive = document.querySelector('.faq-item.active');
-                    if (currentlyActive && currentlyActive !== item) {
-                        currentlyActive.classList.remove('active');
-                    }
-                    item.classList.toggle('active');
-                });
-            });
+            // Inicializar tooltips de Bootstrap
+            this.initializeTooltips();
+
+            // Inicializar popovers de Bootstrap
+            this.initializePopovers();
             
-            console.log('VM Modulares - Landing page inicializada correctamente');
+            console.log('VM Modulares - Bootstrap Landing page inicializada correctamente');
         } catch (error) {
             console.error('Error al inicializar la aplicación:', error);
         }
+    }
+
+    initializeTooltips() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+
+    initializePopovers() {
+        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl);
+        });
     }
 
     setupGlobalEvents() {
@@ -1748,31 +986,24 @@ class App {
                 this.handleResize();
             }, 100);
         });
-
-        // Prevenir zoom en inputs en iOS
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            const inputs = document.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                input.addEventListener('focus', () => {
-                    input.style.fontSize = '16px';
-                });
-            });
-        }
     }
 
     handleResize() {
-        // Lógica de redimensionamiento si es necesaria
-        if (this.components.navigation) {
-            this.components.navigation.setupMobileMenu();
-        }
-        
-        // Recalcular posiciones y tamaños si es necesario
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach(dropdown => {
-            dropdown.style.display = 'none';
-            setTimeout(() => {
-                dropdown.style.display = '';
-            }, 100);
+        // Recalcular tooltips y popovers
+        const tooltips = document.querySelectorAll('.tooltip');
+        tooltips.forEach(tooltip => {
+            const instance = bootstrap.Tooltip.getInstance(tooltip);
+            if (instance) {
+                instance.update();
+            }
+        });
+
+        const popovers = document.querySelectorAll('.popover');
+        popovers.forEach(popover => {
+            const instance = bootstrap.Popover.getInstance(popover);
+            if (instance) {
+                instance.update();
+            }
         });
     }
 }
@@ -1787,7 +1018,6 @@ function refreshCaptcha() {
     })
     .then(response => response.json())
     .then(data => {
-        // Actualizar la imagen del captcha
         const captchaImage = document.getElementById('captcha-image');
         const captchaKeyInput = document.querySelector('input[name="captcha_0"]');
         const captchaValueInput = document.querySelector('input[name="captcha_1"]');
@@ -1807,22 +1037,23 @@ function refreshCaptcha() {
     })
     .catch(error => {
         console.error('Error al refrescar captcha:', error);
+        Utils.showToast('Error al refrescar el captcha', 'error');
     });
 }
 
 // ===== INICIAR APLICACIÓN =====
-new App();
+const vmApp = new BootstrapApp();
 
 // ===== EXPORTAR PARA USO GLOBAL =====
+window.vmApp = vmApp;
 window.VMModulares = {
     Utils,
-    Navigation,
-    Animations,
-    ContactForm,
-    WhatsAppIntegration,
-    BackToTop,
-    PerformanceOptimizer,
-    FotosModal,
+    BootstrapNavigation,
+    BootstrapContactForm,
+    BootstrapFotosModal,
+    BootstrapProducts,
+    BootstrapBackToTop,
+    BootstrapWhatsAppIntegration,
     CONFIG
 };
 

@@ -29,9 +29,8 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
     
-    <!-- CSS -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,187 +42,310 @@
     
     <!-- AOS (Animate On Scroll) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
-        <nav class="navbar">
-            <div class="logo">
-                <h1>VM Modulares</h1>
+    <header class="header fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" href="#inicio">
+                    <h1 class="h3 mb-0">VM Modulares</h1>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#inicio">
+                                <i class="fas fa-home me-1"></i>Inicio
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#productos" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-cube me-1"></i>Productos
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
+                                {% for categoria in categorias %}
+                                <li><h6 class="dropdown-header text-primary">{{ categoria.nombre|upper }}</h6></li>
+                                {% for subcategoria in categoria.subcategoria_set.all %}
+                                <li><a class="dropdown-item navbar-producto-link" href="#{{ subcategoria.nombre|lower|slugify }}" data-subcategoria-id="{{ subcategoria.id }}">{{ subcategoria.nombre }}</a></li>
+                                {% empty %}
+                                <li><span class="dropdown-item-text text-muted">No hay subcategorías disponibles</span></li>
+                                {% endfor %}
+                                {% if not forloop.last %}<li><hr class="dropdown-divider"></li>{% endif %}
+                                {% empty %}
+                                <li><span class="dropdown-item-text text-muted">No hay categorías disponibles</span></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#nosotros">
+                                <i class="fas fa-users me-1"></i>Nosotros
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#ventajas">
+                                <i class="fas fa-star me-1"></i>Ventajas
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#faq">
+                                <i class="fas fa-question-circle me-1"></i>FAQ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contacto">
+                                <i class="fas fa-envelope me-1"></i>Contacto
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-primary ms-2 px-3" href="/admin/" target="_blank" title="Administración">
+                                <i class="fas fa-cog me-1"></i>Admin
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            
-            <ul class="nav-links">
-                <li><a href="#inicio">Inicio</a></li>
-                <li class="dropdown">
-                    <a href="#productos">
-                        <i class="fas fa-cube nav-icon"></i>
-                        Productos
-                    </a>
-                    <div class="dropdown-menu">
-                        {% for categoria in categorias %}
-                        <div class="dropdown-section">
-                            <h4>{{ categoria.nombre|upper }}</h4>
-                            {% for subcategoria in categoria.subcategoria_set.all %}
-                            <a href="#{{ subcategoria.nombre|lower|slugify }}" class="dropdown-link navbar-producto-link" data-subcategoria-id="{{ subcategoria.id }}">{{ subcategoria.nombre }}</a>
-                            {% empty %}
-                            <span class="dropdown-link disabled">No hay subcategorías disponibles</span>
-                            {% endfor %}
-                        </div>
-                        {% empty %}
-                        <div class="dropdown-section">
-                            <span class="dropdown-link disabled">No hay categorías disponibles</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </li>
-                <li>
-                    <a href="#nosotros">
-                        <i class="fas fa-users nav-icon"></i>
-                        Nosotros
-                    </a>
-                </li>
-                <li>
-                    <a href="#ventajas">
-                        <i class="fas fa-star nav-icon"></i>
-                        Ventajas
-                    </a>
-                </li>
-                <li>
-                    <a href="#faq">
-                        <i class="fas fa-question-circle nav-icon"></i>
-                        FAQ
-                    </a>
-                </li>
-                <li>
-                    <a href="#contacto">
-                        <i class="fas fa-envelope nav-icon"></i>
-                        Contacto
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/" class="admin-btn" target="_blank" title="Administración">
-                        <i class="fas fa-cog"></i>
-                        <span class="admin-text">Admin</span>
-                    </a>
-                </li>
-            </ul>
-            
-            <button class="mobile-nav-toggle" id="mobile-nav-toggle">
-                 <i class="fas fa-bars"></i>
-             </button>
         </nav>
+        
+        <!-- Offcanvas for mobile -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">VM Modulares</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#inicio" data-bs-dismiss="offcanvas">
+                            <i class="fas fa-home me-2"></i>Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-cube me-2"></i>Productos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+                            {% for categoria in categorias %}
+                            <li><h6 class="dropdown-header text-primary">{{ categoria.nombre|upper }}</h6></li>
+                            {% for subcategoria in categoria.subcategoria_set.all %}
+                            <li><a class="dropdown-item navbar-producto-link" href="#{{ subcategoria.nombre|lower|slugify }}" data-subcategoria-id="{{ subcategoria.id }}" data-bs-dismiss="offcanvas">{{ subcategoria.nombre }}</a></li>
+                            {% empty %}
+                            <li><span class="dropdown-item-text text-muted">No hay subcategorías disponibles</span></li>
+                            {% endfor %}
+                            {% if not forloop.last %}<li><hr class="dropdown-divider"></li>{% endif %}
+                            {% empty %}
+                            <li><span class="dropdown-item-text text-muted">No hay categorías disponibles</span></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nosotros" data-bs-dismiss="offcanvas">
+                            <i class="fas fa-users me-2"></i>Nosotros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#ventajas" data-bs-dismiss="offcanvas">
+                            <i class="fas fa-star me-2"></i>Ventajas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq" data-bs-dismiss="offcanvas">
+                            <i class="fas fa-question-circle me-2"></i>FAQ
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto" data-bs-dismiss="offcanvas">
+                            <i class="fas fa-envelope me-2"></i>Contacto
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <a class="btn btn-outline-primary w-100" href="/admin/" target="_blank">
+                            <i class="fas fa-cog me-2"></i>Administración
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="inicio" class="hero">
-        <div class="hero-background">
-            <div class="hero-overlay"></div>
+    <section id="inicio" class="hero bg-primary text-white position-relative overflow-hidden">
+        <div class="hero-background position-absolute w-100 h-100">
+            <div class="hero-overlay position-absolute w-100 h-100 bg-dark bg-opacity-50"></div>
         </div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-logo" data-aos="zoom-in" data-aos-duration="1000">
-                    <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" class="hero-logo-image">
-                </div>
-                <h1 class="hero-title" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-                    <span class="hero-subtitle" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">Muebles que se adaptan a tu vida</span>
-                    Diseñamos <span class="highlight">espacios con alma</span>, a tu medida
-                </h1>
-                <div class="hero-features" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-                    <div class="feature-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="250">
-                        <i class="fas fa-palette"></i>
-                        <span>Diseños personalizables</span>
+        <div class="container position-relative" style="z-index: 3;">
+            <div class="row min-vh-100 align-items-center justify-content-center text-center">
+                <div class="col-lg-10 col-xl-8">
+                    <div class="hero-logo mb-4" data-aos="zoom-in" data-aos-duration="1000">
+                        <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" class="img-fluid" style="max-height: 120px;">
                     </div>
-                    <div class="feature-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300">
-                        <i class="fas fa-users"></i>
-                        <span>Asesoría en diseño</span>
+                    <div class="mb-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
+                        <p class="lead mb-2 text-warning">Muebles que se adaptan a tu vida</p>
                     </div>
-                    <div class="feature-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="350">
-                        <i class="fas fa-heart"></i>
-                        <span>Talento colombiano</span>
+                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
+                        Diseñamos <span class="text-warning">espacios con alma</span>, a tu medida
+                    </h1>
+                    
+                    <div class="row g-3 mb-5 justify-content-center" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
+                        <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="250">
+                            <div class="text-center">
+                                <i class="fas fa-palette fs-4 text-warning mb-2"></i>
+                                <small class="d-block">Diseños personalizables</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300">
+                            <div class="text-center">
+                                <i class="fas fa-users fs-4 text-warning mb-2"></i>
+                                <small class="d-block">Asesoría en diseño</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="350">
+                            <div class="text-center">
+                                <i class="fas fa-heart fs-4 text-warning mb-2"></i>
+                                <small class="d-block">Talento colombiano</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="400">
+                            <div class="text-center">
+                                <i class="fas fa-leaf fs-4 text-warning mb-2"></i>
+                                <small class="d-block">Compromiso ambiental</small>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="450">
+                            <div class="text-center">
+                                <i class="fas fa-star fs-4 text-warning mb-2"></i>
+                                <small class="d-block">Calidad y excelencia</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="feature-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="400">
-                        <i class="fas fa-leaf"></i>
-                        <span>Compromiso ambiental</span>
+                    
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
+                        <a href="#productos" class="btn btn-warning btn-lg px-4 py-3 fw-semibold">Conoce nuestros productos</a>
+                        <a href="#contacto" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">Solicita tu cotización</a>
                     </div>
-                    <div class="feature-item" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="450">
-                        <i class="fas fa-star"></i>
-                        <span>Calidad y excelencia</span>
-                    </div>
-                </div>
-                <div class="hero-cta" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
-                    <a href="#productos" class="btn btn-primary">Conoce nuestros productos</a>
-                    <a href="#contacto" class="btn btn-outline">Solicita tu cotización</a>
                 </div>
             </div>
         </div>
-        <div class="scroll-indicator">
-            <div class="scroll-arrow"></div>
+        <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4">
+            <div class="scroll-indicator text-center">
+                <i class="fas fa-chevron-down fs-5 text-warning animate-bounce"></i>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="nosotros" class="about">
+    <section id="nosotros" class="py-5 bg-light">
         <div class="container">
-            <div class="section-header" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="section-title">DONDE LA ELEGANCIA SE ENCUENTRA CON LA FUNCIONALIDAD</h2>
-                <p class="section-subtitle">
-                    Transformamos espacios en experiencias únicas. Con más de dos décadas de maestría artesanal, cada mueble que creamos cuenta una historia de excelencia, innovación y pasión por el diseño colombiano.
-                </p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                    <h2 class="display-5 fw-bold text-primary mb-4">DONDE LA ELEGANCIA SE ENCUENTRA CON LA FUNCIONALIDAD</h2>
+                    <p class="lead text-muted">
+                        Transformamos espacios en experiencias únicas. Con más de dos décadas de maestría artesanal, cada mueble que creamos cuenta una historia de excelencia, innovación y pasión por el diseño colombiano.
+                    </p>
+                </div>
             </div>
-            <div class="about-content">
-                <div class="about-text" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
-                    <p>
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
+                    <p class="fs-5 text-muted mb-4">
                         No solo fabricamos muebles, creamos soluciones que evolucionan contigo. Nuestros diseños modulares se adaptan a tu estilo de vida, crecen con tus necesidades y reflejan tu personalidad única. Cada pieza es una inversión en calidad, durabilidad y belleza atemporal.
                     </p>
-                    <div class="about-stats">
-                        <div class="stat-item" data-aos="flip-left" data-aos-duration="800" data-aos-delay="200">
-                            <span class="stat-number">20+</span>
-                            <span class="stat-label">Años de experiencia</span>
+                    <div class="row g-4">
+                        <div class="col-md-4" data-aos="flip-left" data-aos-duration="800" data-aos-delay="200">
+                            <div class="card text-center border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <h3 class="display-6 fw-bold text-danger mb-1">20+</h3>
+                                    <small class="text-muted text-uppercase fw-semibold">Años de experiencia</small>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-item" data-aos="flip-left" data-aos-duration="800" data-aos-delay="250">
-                            <span class="stat-number">1000+</span>
-                            <span class="stat-label">Proyectos realizados</span>
+                        <div class="col-md-4" data-aos="flip-left" data-aos-duration="800" data-aos-delay="250">
+                            <div class="card text-center border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <h3 class="display-6 fw-bold text-danger mb-1">1000+</h3>
+                                    <small class="text-muted text-uppercase fw-semibold">Proyectos realizados</small>
+                                </div>
+                            </div>
                         </div>
-                        <div class="stat-item" data-aos="flip-left" data-aos-duration="800" data-aos-delay="300">
-                            <span class="stat-number">100%</span>
-                            <span class="stat-label">Satisfacción garantizada</span>
+                        <div class="col-md-4" data-aos="flip-left" data-aos-duration="800" data-aos-delay="300">
+                            <div class="card text-center border-0 shadow-sm h-100">
+                                <div class="card-body">
+                                    <h3 class="display-6 fw-bold text-danger mb-1">100%</h3>
+                                    <small class="text-muted text-uppercase fw-semibold">Satisfacción garantizada</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="about-image" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150">
-                    <img src="{% static 'images/fabricacion2.webp' %}" alt="VM Modulares - Taller de fabricación" class="img-fluid">
+                <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="150">
+                    <div class="position-relative">
+                        <img src="{% static 'images/fabricacion2.webp' %}" alt="VM Modulares - Taller de fabricación" class="img-fluid rounded shadow-lg">
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Competitive Advantages Section -->
-    <section id="ventajas" class="advantages">
+    <section id="ventajas" class="py-5">
         <div class="container">
-            <div class="section-header" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="section-title">¿Por Qué Elegirnos?</h2>
-                <p class="section-subtitle">Descubre nuestras ventajas competitivas</p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                    <h2 class="display-5 fw-bold text-primary mb-4">¿Por Qué Elegirnos?</h2>
+                    <p class="lead text-muted">Descubre nuestras ventajas competitivas</p>
+                </div>
             </div>
-            <div class="advantages-grid">
-                <div class="advantage-item" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
-                    <i class="fas fa-gem"></i>
-                    <h4>Materiales de Primera Calidad</h4>
-                    <p>Utilizamos solo los mejores materiales para garantizar la durabilidad y el acabado perfecto de nuestros muebles.</p>
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="100">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-gem fs-1 text-danger"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Materiales de Primera Calidad</h5>
+                            <p class="card-text text-muted">Utilizamos solo los mejores materiales para garantizar la durabilidad y el acabado perfecto de nuestros muebles.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="advantage-item" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="150">
-                    <i class="fas fa-cubes"></i>
-                    <h4>Diseño Versátil</h4>
-                    <p>Combina módulos para crear infinitas posibilidades y adaptar los muebles a tu estilo y necesidades.</p>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="150">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-cubes fs-1 text-danger"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Diseño Versátil</h5>
+                            <p class="card-text text-muted">Combina módulos para crear infinitas posibilidades y adaptar los muebles a tu estilo y necesidades.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="advantage-item" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
-                    <i class="fas fa-industry"></i>
-                    <h4>Fabricación Local</h4>
-                    <p>Apoyamos a la industria local, lo que nos permite una rápida respuesta y un control de calidad exhaustivo.</p>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="200">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-industry fs-1 text-danger"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Fabricación Local</h5>
+                            <p class="card-text text-muted">Apoyamos a la industria local, lo que nos permite una rápida respuesta y un control de calidad exhaustivo.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="advantage-item" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="250">
-                    <i class="fas fa-wrench"></i>
-                    <h4>Montaje Sencillo</h4>
-                    <p>Nuestros muebles están diseñados para un ensamblaje fácil y rápido, sin complicaciones.</p>
+                <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="250">
+                    <div class="card border-0 shadow-sm h-100 text-center">
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <i class="fas fa-wrench fs-1 text-danger"></i>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3">Montaje Sencillo</h5>
+                            <p class="card-text text-muted">Nuestros muebles están diseñados para un ensamblaje fácil y rápido, sin complicaciones.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,56 +354,77 @@
 
 
     <!-- FAQ Section -->
-    <section id="faq" class="faq">
+    <section id="faq" class="py-5 bg-light">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Preguntas Frecuentes</h2>
-                <p class="section-subtitle">Resolvemos tus dudas más comunes</p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5">
+                    <h2 class="display-5 fw-bold text-primary mb-4">Preguntas Frecuentes</h2>
+                    <p class="lead text-muted">Resolvemos tus dudas más comunes</p>
+                </div>
             </div>
-            <div class="faq-accordion" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
-                <div class="faq-item" data-aos="fade-right" data-aos-duration="800" data-aos-delay="150">
-                    <div class="faq-question">
-                        <h4>¿Qué significa 'modular'?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Significa que nuestros muebles están compuestos por módulos independientes que puedes combinar y reorganizar según tus necesidades, ofreciendo flexibilidad y personalización.</p>
-                    </div>
-                </div>
-                <div class="faq-item" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
-                    <div class="faq-question">
-                        <h4>¿Puedo personalizar las medidas y colores?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>¡Sí! Ofrecemos una amplia gama de acabados y colores. Además, podemos adaptar las medidas de muchos de nuestros muebles a tu espacio. Contáctanos para más detalles.</p>
-                    </div>
-                </div>
-                <div class="faq-item" data-aos="fade-right" data-aos-duration="800" data-aos-delay="250">
-                    <div class="faq-question">
-                        <h4>¿Incluyen el servicio de montaje e instalación?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Ofrecemos el servicio de montaje e instalación en nuestra área de cobertura. Consulta con nuestro equipo si tu ubicación está incluida y las tarifas aplicables.</p>
-                    </div>
-                </div>
-                <div class="faq-item" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
-                    <div class="faq-question">
-                        <h4>¿Cuál es el tiempo de entrega aproximado?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>El tiempo de entrega varía según el producto y la personalización. Generalmente, oscila entre 2 y 4 semanas. Te daremos una fecha estimada al momento de tu compra.</p>
-                    </div>
-                </div>
-                <div class="faq-item" data-aos="fade-right" data-aos-duration="800" data-aos-delay="350">
-                    <div class="faq-question">
-                        <h4>¿Hacen envíos a toda el país?</h4>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Sí, realizamos envíos a las principales ciudades del país a través de transportadoras aliadas. El costo del envío se calcula al finalizar la compra.</p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
+                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="150">
+                            <h2 class="accordion-header" id="faq1">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
+                                    ¿Qué significa 'modular'?
+                                </button>
+                            </h2>
+                            <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Significa que nuestros muebles están compuestos por módulos independientes que puedes combinar y reorganizar según tus necesidades, ofreciendo flexibilidad y personalización.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+                            <h2 class="accordion-header" id="faq2">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                                    ¿Puedo personalizar las medidas y colores?
+                                </button>
+                            </h2>
+                            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    ¡Sí! Ofrecemos una amplia gama de acabados y colores. Además, podemos adaptar las medidas de muchos de nuestros muebles a tu espacio. Contáctanos para más detalles.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="250">
+                            <h2 class="accordion-header" id="faq3">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+                                    ¿Incluyen el servicio de montaje e instalación?
+                                </button>
+                            </h2>
+                            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Ofrecemos el servicio de montaje e instalación en nuestra área de cobertura. Consulta con nuestro equipo si tu ubicación está incluida y las tarifas aplicables.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
+                            <h2 class="accordion-header" id="faq4">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+                                    ¿Cuál es el tiempo de entrega aproximado?
+                                </button>
+                            </h2>
+                            <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    El tiempo de entrega varía según el producto y la personalización. Generalmente, oscila entre 2 y 4 semanas. Te daremos una fecha estimada al momento de tu compra.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="350">
+                            <h2 class="accordion-header" id="faq5">
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
+                                    ¿Hacen envíos a toda el país?
+                                </button>
+                            </h2>
+                            <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-muted">
+                                    Sí, realizamos envíos a las principales ciudades del país a través de transportadoras aliadas. El costo del envío se calcula al finalizar la compra.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -289,48 +432,46 @@
     </section>
 
     <!-- Products Section -->
-    <section id="productos" class="products">
+    <section id="productos" class="py-5">
         <div class="container">
-            <div class="section-header" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="section-title">Nuestros Productos</h2>
-                <p class="section-subtitle">Mobiliario que define tendencias y espacios</p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                    <h2 class="display-5 fw-bold text-primary mb-4">Nuestros Productos</h2>
+                    <p class="lead text-muted">Mobiliario que define tendencias y espacios</p>
+                </div>
             </div>
             
             <!-- Mobile Category Filter -->
-            <div class="mobile-category-filter">
-                <button class="category-filter-btn active" data-category="all">
-                    <i class="fas fa-th-large"></i>
-                    <span>Todos</span>
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-5 d-lg-none">
+                <button class="btn btn-outline-primary category-filter-btn" data-category="all">
+                    <i class="fas fa-th-large me-1"></i>Todos
                 </button>
                 {% for categoria in categorias %}
-                <button class="category-filter-btn" data-category="{{ categoria.nombre|lower|slugify }}">
-                    <i class="fas fa-cube"></i>
-                    <span>{{ categoria.nombre }}</span>
+                <button class="btn btn-outline-primary category-filter-btn" data-category="{{ categoria.nombre|lower|slugify }}">
+                    <i class="fas fa-cube me-1"></i>{{ categoria.nombre }}
                 </button>
                 {% endfor %}
             </div>
             
             <div class="product-categories">
                 {% for categoria in categorias %}
-                <div class="category-section" data-category-name="{{ categoria.nombre|lower|slugify }}">
-                    <div class="category-header">
-                        <h3 class="category-title">
-                            <i class="fas fa-cube category-icon"></i>
+                <div class="category-section mb-5" data-category-name="{{ categoria.nombre|lower|slugify }}">
+                    <div class="text-center mb-4">
+                        <h3 class="h2 fw-bold text-primary mb-3">
+                            <i class="fas fa-cube me-2"></i>
                             {{ categoria.nombre|upper }}
                         </h3>
-                        <div class="category-description">
-                            <p>{{ categoria.descripcion|default:"Explora nuestra colección de muebles modulares" }}</p>
-                        </div>
-                        <button class="mobile-category-toggle" data-category="{{ categoria.nombre|lower|slugify }}">
+                        <p class="text-muted">{{ categoria.descripcion|default:"Explora nuestra colección de muebles modulares" }}</p>
+                        <button class="btn btn-outline-primary d-lg-none mobile-category-toggle" data-category="{{ categoria.nombre|lower|slugify }}">
                             <span class="toggle-text">Ver productos</span>
-                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <i class="fas fa-chevron-down ms-2 toggle-icon"></i>
                         </button>
                     </div>
                     
                     <div class="category-content" id="category-{{ categoria.nombre|lower|slugify }}">
-                        <div class="subcategory-tabs">
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
                             {% for subcategoria in categoria.subcategoria_set.all %}
-                            <button class="subcategory-tab {% if forloop.first %}active{% endif %}" 
+                            <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-outline-secondary{% endif %} subcategory-tab" 
                                     data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
                                     data-category="{{ categoria.nombre|lower|slugify }}">
                                 {{ subcategoria.nombre }}
@@ -338,54 +479,52 @@
                             {% endfor %}
                         </div>
                         
-                        <div class="products-grid">
+                        <div class="row g-4 products-grid">
                             {% for subcategoria in categoria.subcategoria_set.all %}
-                            <div class="product-card {% if not forloop.first %}hidden{% endif %}" 
+                            <div class="col-lg-4 col-md-6 product-card {% if not forloop.first %}d-none{% endif %}" 
                                  data-subcategoria-id="{{ subcategoria.id }}" 
                                  data-category="{{ categoria.nombre|lower|slugify }}" 
                                  data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
-                                 data-aos="slide-up" data-aos-duration="800" data-aos-delay="100">
-                                <div class="product-image">
-                                    {% with foto_destacada=fotos_destacadas|get_item:subcategoria.id %}
-                                        {% if foto_destacada %}
-                                            <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}" loading="lazy">
-                                        {% else %}
-                                            <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}" loading="lazy">
-                                        {% endif %}
-                                    {% endwith %}
-                                    <div class="product-overlay">
-                                        <div class="overlay-buttons">
-                                            <button class="btn btn-white btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}">
-                                                <i class="fas fa-images"></i>
-                                                Ver fotos
-                                            </button>
-                                            <button class="btn btn-outline btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}">
-                                                <i class="fas fa-calculator"></i>
-                                                Cotizar
-                                            </button>
+                                 data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
+                                <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                                    <div class="position-relative">
+                                        {% with foto_destacada=fotos_destacadas|get_item:subcategoria.id %}
+                                            {% if foto_destacada %}
+                                                <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 250px; object-fit: cover;" loading="lazy">
+                                            {% else %}
+                                                <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 250px; object-fit: cover;" loading="lazy">
+                                            {% endif %}
+                                        {% endwith %}
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center opacity-0 product-overlay" style="transition: opacity 0.3s ease;">
+                                            <div class="d-flex flex-column gap-2">
+                                                <button class="btn btn-light btn-sm btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}">
+                                                    <i class="fas fa-images me-1"></i>Ver fotos
+                                                </button>
+                                                <button class="btn btn-outline-light btn-sm btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}">
+                                                    <i class="fas fa-calculator me-1"></i>Cotizar
+                                                </button>
+                                            </div>
                                         </div>
+                                        <span class="position-absolute top-0 end-0 badge bg-primary m-2">{{ categoria.nombre }}</span>
                                     </div>
-                                </div>
-                                <div class="product-info">
-                                    <div class="product-badge">{{ categoria.nombre }}</div>
-                                    <h4>{{ subcategoria.nombre }}</h4>
-                                    <p>{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos" }}</p>
-                                    <div class="product-features">
-                                        <span class="feature-tag">
-                                            <i class="fas fa-palette"></i>
-                                            Personalizable
-                                        </span>
-                                        <span class="feature-tag">
-                                            <i class="fas fa-tools"></i>
-                                            Modular
-                                        </span>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">{{ subcategoria.nombre }}</h5>
+                                        <p class="card-text text-muted small">{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos" }}</p>
+                                        <div class="d-flex gap-1 flex-wrap">
+                                            <span class="badge bg-light text-dark">
+                                                <i class="fas fa-palette me-1"></i>Personalizable
+                                            </span>
+                                            <span class="badge bg-light text-dark">
+                                                <i class="fas fa-tools me-1"></i>Modular
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             {% empty %}
-                            <div class="no-products">
-                                <div class="no-products-content">
-                                    <i class="fas fa-box-open"></i>
+                            <div class="col-12 text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-box-open fs-1 mb-3"></i>
                                     <h4>Sin productos disponibles</h4>
                                     <p>No hay subcategorías disponibles en esta categoría.</p>
                                 </div>
@@ -395,9 +534,9 @@
                     </div>
                 </div>
                 {% empty %}
-                <div class="no-categories">
-                    <div class="no-categories-content">
-                        <i class="fas fa-exclamation-triangle"></i>
+                <div class="text-center py-5">
+                    <div class="text-muted">
+                        <i class="fas fa-exclamation-triangle fs-1 mb-3"></i>
                         <h3>Sin categorías disponibles</h3>
                         <p>No hay categorías disponibles en este momento.</p>
                         <a href="#contacto" class="btn btn-primary">Contáctanos</a>
@@ -409,219 +548,275 @@
     </section>
 
     <!-- Modal para mostrar fotos de subcategoría -->
-    <div id="fotosModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Fotos de Subcategoría</h3>
-                <span class="modal-close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div id="fotosContainer" class="fotos-grid">
-                    <!-- Las fotos se cargarán dinámicamente aquí -->
+    <div class="modal fade" id="fotosModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalTitle">Fotos de Subcategoría</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div id="loadingSpinner" class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>Cargando fotos...</p>
-                </div>
-                <div id="errorMessage" class="error-message" style="display: none;">
-                    <p>Error al cargar las fotos. Por favor, intenta nuevamente.</p>
+                <div class="modal-body p-4">
+                    <div id="fotosContainer" class="row g-3">
+                        <!-- Las fotos se cargarán dinámicamente aquí -->
+                    </div>
+                    <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted">Cargando fotos...</p>
+                    </div>
+                    <div id="errorMessage" class="alert alert-danger text-center" style="display: none;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Error al cargar las fotos. Por favor, intenta nuevamente.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Contact Section -->
-    <section id="contacto" class="contact">
+    <section id="contacto" class="py-5 bg-light">
         <div class="container">
-            <div class="section-header" data-aos="fade-up" data-aos-duration="1000">
-                <h2 class="section-title">Diseñemos juntos tu espacio ideal</h2>
-                <p class="section-subtitle">Recibe asesoría personalizada y cotiza sin compromiso</p>
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
+                    <h2 class="display-5 fw-bold text-primary mb-4">Diseñemos juntos tu espacio ideal</h2>
+                    <p class="lead text-muted">Recibe asesoría personalizada y cotiza sin compromiso</p>
+                </div>
             </div>
             
-            <div class="contact-content">
-                <div class="contact-info" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
-                    <h3>Información de Contacto</h3>
-                    <div class="contact-item" data-aos="slide-right" data-aos-duration="600" data-aos-delay="150">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Dirección</h4>
-                            <p>Bogotá, Colombia</p>
-                        </div>
-                    </div>
-                    <div class="contact-item" data-aos="slide-right" data-aos-duration="600" data-aos-delay="200">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <h4>Teléfono</h4>
-                            <p>+57 3107598740</p>
-                        </div>
-                    </div>
-                    <div class="contact-item" data-aos="slide-right" data-aos-duration="600" data-aos-delay="250">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p>info@vmmodulares.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item" data-aos="slide-right" data-aos-duration="600" data-aos-delay="300">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h4>Horarios</h4>
-                            <p>Lun - Vie: 8:00 AM - 6:00 PM<br>Sáb: 9:00 AM - 4:00 PM</p>
+            <div class="row g-5">
+                <div class="col-lg-4" data-aos="fade-right" data-aos-duration="1000" data-aos-delay="100">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h4 class="card-title fw-bold text-primary mb-4">Información de Contacto</h4>
+                            <div class="d-flex align-items-start mb-3" data-aos="slide-right" data-aos-duration="600" data-aos-delay="150">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-map-marker-alt fs-5 text-danger me-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Dirección</h6>
+                                    <p class="text-muted mb-0">Bogotá, Colombia</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start mb-3" data-aos="slide-right" data-aos-duration="600" data-aos-delay="200">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-phone fs-5 text-danger me-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Teléfono</h6>
+                                    <p class="text-muted mb-0">+57 3107598740</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start mb-3" data-aos="slide-right" data-aos-duration="600" data-aos-delay="250">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-envelope fs-5 text-danger me-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Email</h6>
+                                    <p class="text-muted mb-0">info@vmmodulares.com</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-start" data-aos="slide-right" data-aos-duration="600" data-aos-delay="300">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-clock fs-5 text-danger me-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">Horarios</h6>
+                                    <p class="text-muted mb-0">Lun - Vie: 8:00 AM - 6:00 PM<br>Sáb: 9:00 AM - 4:00 PM</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="contact-form-container" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
-                    <form class="contact-form" id="contact-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="nombre">Nombre completo *</label>
-                                <input type="text" id="nombre" name="nombre" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
+                <div class="col-lg-8" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="300">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <form class="needs-validation" id="contact-form" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="nombre" class="form-label fw-semibold">Nombre completo *</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa tu nombre completo.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label fw-semibold">Email *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <div class="invalid-feedback">
+                                            Por favor ingresa un email válido.
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="telefono" class="form-label fw-semibold">Teléfono</label>
+                                        <input type="tel" class="form-control" id="telefono" name="telefono">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="categoria" class="form-label fw-semibold">Categoría de interés</label>
+                                        <select class="form-select" id="categoria" name="categoria">
+                                            <option value="">Selecciona una categoría</option>
+                                            {% for categoria in categorias %}
+                                            <optgroup label="{{ categoria.nombre|upper }}">
+                                                {% for subcategoria in categoria.subcategoria_set.all %}
+                                                <option value="{{ subcategoria.nombre|lower|slugify }}">{{ subcategoria.nombre }}</option>
+                                                {% empty %}
+                                                <option value="" disabled>No hay subcategorías disponibles</option>
+                                                {% endfor %}
+                                            </optgroup>
+                                            {% empty %}
+                                            <option value="" disabled>No hay categorías disponibles</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="mensaje" class="form-label fw-semibold">Mensaje *</label>
+                                    <textarea class="form-control" id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos sobre tu proyecto..." required></textarea>
+                                    <div class="invalid-feedback">
+                                        Por favor ingresa tu mensaje.
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <label for="captcha" class="form-label fw-semibold">Código de verificación *</label>
+                                    <div class="d-flex align-items-center gap-2 mb-2 p-2 bg-light rounded">
+                                        <input type="hidden" name="captcha_0" value="{{ captcha_key }}">
+                                        <img src="{{ captcha_image }}" alt="Captcha" class="captcha-image" id="captcha-image" style="max-height: 40px;">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="refreshCaptcha()" title="Generar nuevo código">
+                                            <i class="fas fa-sync-alt"></i>
+                                        </button>
+                                    </div>
+                                    <input type="text" class="form-control" id="captcha" name="captcha_1" placeholder="Ingrese el código mostrado" required autocomplete="off">
+                                    <div class="invalid-feedback">
+                                        Por favor ingresa el código de verificación.
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                                        <span class="btn-text">
+                                            <i class="fas fa-paper-plane me-2"></i>Enviar mensaje
+                                        </span>
+                                        <span class="btn-loading d-none">
+                                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                            Enviando...
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="telefono">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono">
-                            </div>
-                            <div class="form-group">
-                                <label for="categoria">Categoría de interés</label>
-                                <select id="categoria" name="categoria">
-                                    <option value="">Selecciona una categoría</option>
-                                    {% for categoria in categorias %}
-                                    <optgroup label="{{ categoria.nombre|upper }}">
-                                        {% for subcategoria in categoria.subcategoria_set.all %}
-                                        <option value="{{ subcategoria.nombre|lower|slugify }}">{{ subcategoria.nombre }}</option>
-                                        {% empty %}
-                                        <option value="" disabled>No hay subcategorías disponibles</option>
-                                        {% endfor %}
-                                    </optgroup>
-                                    {% empty %}
-                                    <option value="" disabled>No hay categorías disponibles</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="mensaje">Mensaje *</label>
-                            <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos sobre tu proyecto..." required></textarea>
-                        </div>
-                        
-                        <div class="form-group captcha-group">
-                            <label for="captcha">Código de verificación *</label>
-                            <div class="captcha-container">
-                                <input type="hidden" name="captcha_0" value="{{ captcha_key }}">
-                                <img src="{{ captcha_image }}" alt="Captcha" class="captcha-image" id="captcha-image">
-                                <button type="button" class="captcha-refresh" onclick="refreshCaptcha()" title="Generar nuevo código">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                            </div>
-                            <input type="text" id="captcha" name="captcha_1" placeholder="Ingrese el código mostrado" required autocomplete="off">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-full">
-                            <span class="btn-text">Enviar mensaje</span>
-                            <span class="btn-loading">Enviando...</span>
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="bg-primary text-white py-5">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="mb-3">
+                        <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" style="height: 60px;">
                     </div>
-                    <p class="footer-description">
+                    <p class="text-white-50 mb-4">
                         Más de 20 años creando muebles modulares de alta calidad para hogar y empresa. Diseño, funcionalidad y excelencia en cada proyecto.
                     </p>
-                    <div class="social-links">
-                        <a href="#" class="social-link" aria-label="Facebook">
+                    <div class="d-flex gap-2">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="Instagram">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="LinkedIn">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="LinkedIn">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <a href="#" class="social-link" aria-label="WhatsApp">
+                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
                 
-                <div class="footer-section">
-                    <h4>Productos</h4>
-                    <ul class="footer-links">
-                        <li><a href="#cocina">Cocina</a></li>
-                        <li><a href="#bano">Baño</a></li>
-                        <li><a href="#dormitorios">Dormitorios</a></li>
-                        <li><a href="#escritorios">Escritorios</a></li>
-                        <li><a href="#mesas-juntas">Mesas de Juntas</a></li>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="fw-bold mb-3">Productos</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#cocina" class="text-white-50 text-decoration-none">Cocina</a></li>
+                        <li class="mb-2"><a href="#bano" class="text-white-50 text-decoration-none">Baño</a></li>
+                        <li class="mb-2"><a href="#dormitorios" class="text-white-50 text-decoration-none">Dormitorios</a></li>
+                        <li class="mb-2"><a href="#escritorios" class="text-white-50 text-decoration-none">Escritorios</a></li>
+                        <li class="mb-2"><a href="#mesas-juntas" class="text-white-50 text-decoration-none">Mesas de Juntas</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-section">
-                    <h4>Empresa</h4>
-                    <ul class="footer-links">
-                        <li><a href="#nosotros">Nosotros</a></li>
-                        <li><a href="#contacto">Contacto</a></li>
-                        <li><a href="#">Proyectos</a></li>
-                        <li><a href="#">Testimonios</a></li>
-                        <li><a href="#">Blog</a></li>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="fw-bold mb-3">Empresa</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#nosotros" class="text-white-50 text-decoration-none">Nosotros</a></li>
+                        <li class="mb-2"><a href="#contacto" class="text-white-50 text-decoration-none">Contacto</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Proyectos</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Testimonios</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 text-decoration-none">Blog</a></li>
                     </ul>
                 </div>
                 
-                <div class="footer-section">
-                    <h4>Contacto</h4>
-                    <div class="footer-contact">
-                        <p><i class="fas fa-map-marker-alt"></i> Bogotá, Colombia</p>
-                        <p><i class="fas fa-phone"></i> +57 3107598740</p>
-                        <p><i class="fas fa-envelope"></i> info@vmmodulares.com</p>
+                <div class="col-lg-4">
+                    <h5 class="fw-bold mb-3">Contacto</h5>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-map-marker-alt text-warning me-2"></i>
+                        <span class="text-white-50">Bogotá, Colombia</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-phone text-warning me-2"></i>
+                        <span class="text-white-50">+57 3107598740</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-envelope text-warning me-2"></i>
+                        <span class="text-white-50">info@vmmodulares.com</span>
                     </div>
                 </div>
             </div>
             
-            <div class="footer-bottom">
-                <div class="footer-bottom-content">
-                    <p>&copy; {{ current_year }} VM Modulares. Todos los derechos reservados.</p>
-                    <div class="footer-legal">
-                        <a href="#">Términos y Condiciones</a>
-                        <a href="#">Política de Privacidad</a>
-                    </div>
+            <hr class="my-4 border-white-50">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0 text-white-50">&copy; {{ current_year }} VM Modulares. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white-50 text-decoration-none me-3">Términos y Condiciones</a>
+                    <a href="#" class="text-white-50 text-decoration-none">Política de Privacidad</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <!-- WhatsApp Float Button -->
-    <div class="whatsapp-float" id="whatsapp-float">
-        <a href="https://wa.me/573107598740?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20muebles%20modulares" target="_blank" class="whatsapp-link">
-            <i class="fab fa-whatsapp"></i>
-            <span class="whatsapp-text">¿Necesitas ayuda?</span>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
+        <a href="https://wa.me/573107598740?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20muebles%20modulares" target="_blank" class="btn btn-success rounded-pill shadow-lg d-flex align-items-center gap-2 px-3 py-2" id="whatsapp-float">
+            <i class="fab fa-whatsapp fs-4"></i>
+            <span class="d-none d-md-inline fw-semibold">¿Necesitas ayuda?</span>
         </a>
     </div>
 
     <!-- Back to Top Button -->
-    <button class="back-to-top" id="back-to-top" aria-label="Volver arriba">
+    <button class="btn btn-primary rounded-circle position-fixed shadow-lg" id="back-to-top" style="bottom: 80px; right: 20px; width: 50px; height: 50px; z-index: 1040; opacity: 0; visibility: hidden; transition: all 0.3s ease;" aria-label="Volver arriba">
         <i class="fas fa-chevron-up"></i>
     </button>
 
     <!-- JavaScript -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
     <!-- AOS (Animate On Scroll) -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Custom JS -->
     <script src="{% static 'js/home.js' %}"></script>
 </body>
 </html>
