@@ -573,8 +573,8 @@ class BootstrapFotosModal {
     }
     
     createLightboxWithNavigation() {
-        if (this.currentLightbox) {
-            document.body.removeChild(this.currentLightbox);
+        if (this.currentLightbox && this.currentLightbox.parentNode) {
+            this.currentLightbox.parentNode.removeChild(this.currentLightbox);
         }
         
         const foto = this.currentFotos[this.currentIndex];
@@ -584,7 +584,7 @@ class BootstrapFotosModal {
         lightbox.style.cssText = 'z-index: 2000;';
         
         lightbox.innerHTML = `
-            <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 20px; right: 20px; width: 50px; height: 50px; z-index: 10;" onclick="this.closest('.position-fixed').remove(); document.body.style.overflow = 'auto';" title="Cerrar galería">
+            <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 20px; right: 20px; width: 50px; height: 50px; z-index: 10;" onclick="this.closest('.position-fixed').remove(); document.body.style.overflow = 'auto'; window.vmApp.fotosModal.currentLightbox = null;" title="Cerrar galería">
                 <i class="fas fa-times"></i>
             </button>
             ${this.currentFotos.length > 1 ? `
@@ -613,6 +613,7 @@ class BootstrapFotosModal {
                     lightbox.remove();
                     document.body.style.overflow = 'auto';
                     document.removeEventListener('keydown', handleKeydown);
+                    this.currentLightbox = null;
                     break;
                 case 'ArrowLeft':
                     this.navigatePrevious();
@@ -631,6 +632,7 @@ class BootstrapFotosModal {
                 lightbox.remove();
                 document.body.style.overflow = 'auto';
                 document.removeEventListener('keydown', handleKeydown);
+                this.currentLightbox = null;
             }
         });
     }
