@@ -7,8 +7,8 @@
 const CONFIG = {
     whatsapp: {
         number: '573107598740',
-        message: 'Hola, me interesa conocer más sobre sus muebles modulares'
-    },
+         message: 'Hola, me interesa conocer más sobre sus muebles modulares'
+     },
     animations: {
         duration: 300,
         easing: 'ease-in-out'
@@ -485,13 +485,8 @@ class BootstrapFotosModal {
     }
     
     async loadSubcategoriaFotos(subcategoriaId) {
-        if (!this.modal) return;
-        
-        // Mostrar modal usando Bootstrap
-        const bsModal = new bootstrap.Modal(this.modal);
-        bsModal.show();
-        
-        this.showLoading();
+        // Mostrar indicador de carga temporal
+        this.showTemporaryLoader();
         
         try {
             const response = await fetch(`/api/subcategoria/${subcategoriaId}/fotos/`);
@@ -503,13 +498,16 @@ class BootstrapFotosModal {
             const data = await response.json();
             
             if (data.success) {
-                this.displayFotos(data.subcategoria, data.fotos);
+                // Ir directamente a la galería lightbox
+                this.openDirectGallery(data.subcategoria, data.fotos);
             } else {
                 throw new Error(data.message || 'Error al cargar las fotos');
             }
         } catch (error) {
             console.error('Error loading subcategoria fotos:', error);
-            this.showError();
+            Utils.showToast('Error al cargar las fotos. Por favor, intenta nuevamente.', 'error');
+        } finally {
+            this.hideTemporaryLoader();
         }
     }
     
@@ -582,25 +580,25 @@ class BootstrapFotosModal {
         const foto = this.currentFotos[this.currentIndex];
         
         const lightbox = document.createElement('div');
-        lightbox.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
-        lightbox.style.cssText = 'background: rgba(0, 0, 0, 0.9); z-index: 2000; backdrop-filter: blur(5px);';
+        lightbox.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center lightbox-gallery';
+        lightbox.style.cssText = 'z-index: 2000;';
         
         lightbox.innerHTML = `
-            <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 20px; right: 20px; width: 50px; height: 50px; z-index: 10;" onclick="this.closest('.position-fixed').remove(); document.body.style.overflow = 'auto';">
+            <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 20px; right: 20px; width: 50px; height: 50px; z-index: 10;" onclick="this.closest('.position-fixed').remove(); document.body.style.overflow = 'auto';" title="Cerrar galería">
                 <i class="fas fa-times"></i>
             </button>
             ${this.currentFotos.length > 1 ? `
-                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; left: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigatePrevious()">
-                    <i class="fas fa-chevron-left"></i>
+                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; left: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigatePrevious()" title="Imagen anterior">
+                    <i class="fas fa-chevron-left fs-4"></i>
                 </button>
-                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; right: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigateNext()">
-                    <i class="fas fa-chevron-right"></i>
+                <button class="btn btn-outline-light rounded-circle position-absolute" style="top: 50%; right: 30px; transform: translateY(-50%); width: 60px; height: 60px; z-index: 10;" onclick="window.vmApp.fotosModal.navigateNext()" title="Siguiente imagen">
+                    <i class="fas fa-chevron-right fs-4"></i>
                 </button>
             ` : ''}
             <div class="text-center">
-                <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" class="img-fluid rounded" style="max-height: 80vh; max-width: 90vw;">
-                ${foto.descripcion ? `<div class="mt-3 text-white bg-dark bg-opacity-75 rounded px-3 py-2 d-inline-block">${foto.descripcion}</div>` : ''}
-                ${this.currentFotos.length > 1 ? `<div class="mt-2 text-white bg-dark bg-opacity-75 rounded px-2 py-1 d-inline-block small">${this.currentIndex + 1} / ${this.currentFotos.length}</div>` : ''}
+                <img src="${foto.imagen_url}" alt="${foto.descripcion || 'Foto de producto'}" class="img-fluid" style="max-height: 85vh; max-width: 90vw; cursor: pointer;" onclick="window.vmApp.fotosModal.navigateNext()">
+                ${foto.descripcion ? `<div class="mt-3 text-white lightbox-description rounded px-3 py-2 d-inline-block">${foto.descripcion}</div>` : ''}
+                ${this.currentFotos.length > 1 ? `<div class="mt-2 text-white lightbox-counter rounded px-2 py-1 d-inline-block small">${this.currentIndex + 1} / ${this.currentFotos.length}</div>` : ''}
             </div>
         `;
         
@@ -713,6 +711,49 @@ class BootstrapFotosModal {
     hideError() {
         if (this.errorMessage) {
             this.errorMessage.style.display = 'none';
+        }
+    }
+    
+    openDirectGallery(subcategoria, fotos) {
+        if (fotos.length === 0) {
+            Utils.showToast(`No hay fotos disponibles para ${subcategoria.nombre}`, 'info');
+            return;
+        }
+        
+        // Guardar las fotos y abrir directamente el lightbox
+        this.currentFotos = fotos;
+        this.currentIndex = 0;
+        this.createLightboxWithNavigation();
+    }
+    
+    showTemporaryLoader() {
+        // Crear un loader temporal que se superpone a la página
+        if (document.getElementById('tempLoader')) return;
+        
+        const loader = document.createElement('div');
+        loader.id = 'tempLoader';
+        loader.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center temp-loader';
+        loader.style.cssText = 'z-index: 1500;';
+        
+        loader.innerHTML = `
+            <div class="text-center text-white">
+                <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mb-0 fw-semibold">Cargando galería...</p>
+                <small class="text-white-50">Preparando las imágenes</small>
+            </div>
+        `;
+        
+        document.body.appendChild(loader);
+        document.body.style.overflow = 'hidden';
+    }
+    
+    hideTemporaryLoader() {
+        const loader = document.getElementById('tempLoader');
+        if (loader) {
+            loader.remove();
+            document.body.style.overflow = 'auto';
         }
     }
 }
