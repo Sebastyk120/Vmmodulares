@@ -471,7 +471,7 @@
                     <div class="category-content" id="category-{{ categoria.nombre|lower|slugify }}">
                         <div class="d-flex flex-wrap justify-content-center gap-2 mb-4">
                             {% for subcategoria in categoria.subcategoria_set.all %}
-                            <button class="btn btn-sm {% if forloop.first %}btn-primary{% else %}btn-outline-secondary{% endif %} subcategory-tab" 
+                            <button class="btn btn-sm btn-outline-secondary subcategory-tab" 
                                     data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
                                     data-category="{{ categoria.nombre|lower|slugify }}">
                                 {{ subcategoria.nombre }}

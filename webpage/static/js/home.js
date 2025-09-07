@@ -765,15 +765,20 @@ class BootstrapProducts {
     }
 
     setupProductFiltering() {
+        // Ensure no filter buttons are active initially
+        const filterButtons = document.querySelectorAll('.category-filter-btn');
+        filterButtons.forEach(btn => {
+            btn.classList.remove('active', 'btn-primary');
+            btn.classList.add('btn-outline-primary');
+        });
+        
         // Show all products by default - no filter selected initially
         this.filterByCategory('all');
         
-        // Initialize subcategory tabs
-        const firstTabs = document.querySelectorAll('.subcategory-tab.btn-primary');
-        firstTabs.forEach(tab => {
-            const subcategory = tab.dataset.subcategoria;
-            const categorySection = tab.closest('.category-section');
-            this.filterBySubcategory(categorySection, subcategory);
+        // Initialize subcategory tabs - show all products in each category by default
+        const categoryContainers = document.querySelectorAll('.category-section');
+        categoryContainers.forEach(categorySection => {
+            this.filterBySubcategory(categorySection, 'all');
         });
     }
 
