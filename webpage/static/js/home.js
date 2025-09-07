@@ -988,12 +988,15 @@ class BootstrapApp {
             }
 
             // Inicializar componentes Bootstrap
-            this.components.navigation = new BootstrapNavigation();
-            this.components.contactForm = new BootstrapContactForm();
-            this.components.fotosModal = new BootstrapFotosModal();
-            this.components.products = new BootstrapProducts();
-            this.components.backToTop = new BootstrapBackToTop();
-            this.components.whatsapp = new BootstrapWhatsAppIntegration();
+        this.components.navigation = new BootstrapNavigation();
+        this.components.contactForm = new BootstrapContactForm();
+        this.components.fotosModal = new BootstrapFotosModal();
+        this.components.products = new BootstrapProducts();
+        this.components.backToTop = new BootstrapBackToTop();
+        this.components.whatsapp = new BootstrapWhatsAppIntegration();
+
+        // Mantener compatibilidad con referencias directas
+        this.fotosModal = this.components.fotosModal;
 
             // Configurar eventos globales
             this.setupGlobalEvents();
