@@ -33,13 +33,13 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = [
     'vm-modulares.up.railway.app', '127.0.0.1',
-    'fieldex.com.co', 'www.vm-modulares.com.co',
+    'vmmodulares.com', 'www.vmmodulares.com',
 ]
-CSRF_TRUSTED_ORIGINS = ["https://*.up.railway.app", "https://*.vm-modulares.com.co"]
+CSRF_TRUSTED_ORIGINS = ["https://*.up.railway.app", "https://*.vmmodulares.com"]
 
 CORS_ORIGINS_WHITELIST = ["https://vm-modulares.up.railway.app",
-                          "https://vm-modulares.com.co",
-                          "https://www.vm-modulares.com.co",]
+                          "https://vmmodulares.com",
+                          "https://www.vmmodulares.com",]
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
