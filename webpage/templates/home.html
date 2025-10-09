@@ -6,25 +6,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ site_name }} - Fabricación de Muebles Modulares para Hogar y Empresa</title>
+    <title>VM Modulares Bogotá - Fabricación de Muebles Modulares para Hogar y Empresa</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="{{ default_description }}">
-    <meta name="keywords" content="{{ meta_keywords }}">
+    <meta name="description" content="Fabricantes de muebles modulares en Bogotá, Colombia. Diseño y producción de mobiliario para hogar y oficina. Servicio personalizado y envíos en Bogotá y alrededores. {{ default_description }}">
+    <meta name="keywords" content="muebles modulares bogotá, fabricación muebles bogotá, muebles a medida bogotá, carpintería bogotá, {{ meta_keywords }}">
     <meta name="author" content="VM Modulares">
     <meta name="robots" content="index, follow">
+    <meta name="geo.region" content="CO-DC">
+    <meta name="geo.placename" content="Bogotá">
+    <meta name="geo.position" content="4.6097;-74.0817">
+    <meta name="ICBM" content="4.6097, -74.0817">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="VM Modulares - Muebles Modulares">
-    <meta property="og:description" content="{{ default_description }}">
+    <meta property="og:title" content="VM Modulares Bogotá - Muebles Modulares">
+    <meta property="og:description" content="Fabricantes de muebles modulares en Bogotá. Diseño y producción de mobiliario personalizado para hogar y oficina. {{ default_description }}">
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ canonical_base_url }}">
     <meta property="og:site_name" content="{{ site_name }}">
+    <meta property="og:locale" content="es_CO">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="VM Modulares - Muebles Modulares">
-    <meta name="twitter:description" content="{{ default_description }}">
+    <meta name="twitter:title" content="VM Modulares Bogotá - Muebles Modulares">
+    <meta name="twitter:description" content="Fabricantes de muebles modulares en Bogotá. Diseño y producción de mobiliario personalizado para hogar y oficina. {{ default_description }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ canonical_base_url }}">
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
@@ -32,10 +40,10 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     
-    <!-- Google Fonts -->
+    <!-- Google Fonts - Sistema Tipográfico Profesional -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -73,7 +81,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="navbarDropdown">
                                 {% for categoria in categorias %}
-                                <li><h6 class="dropdown-header text-primary">{{ categoria.nombre|upper }}</h6></li>
+                                <li><h6 class="dropdown-header" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">{{ categoria.nombre|upper }}</h6></li>
                                 {% for subcategoria in categoria.subcategoria_set.all %}
                                 <li><a class="dropdown-item navbar-producto-link" href="#{{ subcategoria.nombre|lower|slugify }}" data-subcategoria-id="{{ subcategoria.id }}">{{ subcategoria.nombre }}</a></li>
                                 {% empty %}
@@ -118,7 +126,7 @@
         <!-- Offcanvas for mobile -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">VM Modulares</h5>
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">VM Modulares</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
@@ -134,7 +142,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
                             {% for categoria in categorias %}
-                            <li><h6 class="dropdown-header text-primary">{{ categoria.nombre|upper }}</h6></li>
+                            <li><h6 class="dropdown-header" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">{{ categoria.nombre|upper }}</h6></li>
                             {% for subcategoria in categoria.subcategoria_set.all %}
                             <li><a class="dropdown-item navbar-producto-link" href="#{{ subcategoria.nombre|lower|slugify }}" data-subcategoria-id="{{ subcategoria.id }}" data-bs-dismiss="offcanvas">{{ subcategoria.nombre }}</a></li>
                             {% empty %}
@@ -176,67 +184,68 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="hero bg-primary text-white position-relative overflow-hidden">
+    <!-- Hero Section - Tipografía Profesional con Contraste Óptimo -->
+    <section id="inicio" class="hero position-relative overflow-hidden" style="background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); color: white;">
         <div class="hero-background position-absolute w-100 h-100">
-            <div class="hero-overlay position-absolute w-100 h-100 bg-dark bg-opacity-50"></div>
+            <div class="hero-overlay position-absolute w-100 h-100" style="background: rgba(0, 0, 0, 0.6);"></div>
         </div>
-        <div class="container position-relative" style="z-index: 3;">
+        <div class="container-fluid position-relative" style="z-index: 3;">
             <div class="row min-vh-100 align-items-center justify-content-center text-center">
                 <div class="col-lg-10 col-xl-8">
-                    <div class="hero-logo mb-4" data-aos="zoom-in" data-aos-duration="1000">
-                        <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" class="img-fluid" style="max-height: 120px;">
+                    <div class="hero-logo mb-5" data-aos="zoom-in" data-aos-duration="1000">
+                        <img src="{% static 'images/logo-vm-modulares.svg' %}" alt="VM Modulares Logo" class="img-fluid" style="max-height: 200px; filter: drop-shadow(0 4px 8px rgba(255,255,255,0.1));">
                     </div>
                     <div class="mb-4" data-aos="fade-up" data-aos-duration="800" data-aos-delay="300">
-                        <p class="lead mb-2 text-warning">Muebles que se adaptan a tu vida</p>
+                        <p class="lead mb-3 fw-semibold" style="font-size: 1.6rem; letter-spacing: 0.5px; font-family: 'Open Sans', sans-serif;">Muebles que se adaptan a tu vida</p>
                     </div>
-                    <h1 class="display-4 fw-bold mb-4" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200">
-                        Diseñamos <span class="text-warning">espacios con alma</span>, a tu medida
+                    <h1 class="display-3 fw-bold mb-5 lh-sm" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" style="font-family: 'Playfair Display', serif;">
+                        Diseñamos <span style="color: #16A085;">espacios con alma</span><br>
+                        <small class="d-block mt-3" style="font-size: 1.4rem; font-weight: 400; letter-spacing: 1px; font-family: 'Open Sans', sans-serif;">A tu medida, con calidad excepcional</small>
                     </h1>
                     
                     <div class="row g-3 mb-5 justify-content-center" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="400">
                         <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="250">
                             <div class="text-center">
-                                <i class="fas fa-palette fs-4 text-warning mb-2"></i>
-                                <small class="d-block">Diseños personalizables</small>
+                                <i class="fas fa-palette fs-4 mb-2" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
+                                <small class="d-block" style="font-family: 'Open Sans', sans-serif;">Diseños personalizables</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300">
                             <div class="text-center">
-                                <i class="fas fa-users fs-4 text-warning mb-2"></i>
-                                <small class="d-block">Asesoría en diseño</small>
+                                <i class="fas fa-users fs-4 mb-2" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
+                                <small class="d-block" style="font-family: 'Open Sans', sans-serif;">Asesoría en diseño</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="350">
                             <div class="text-center">
-                                <i class="fas fa-heart fs-4 text-warning mb-2"></i>
-                                <small class="d-block">Talento colombiano</small>
+                                <i class="fas fa-heart fs-4 mb-2" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
+                                <small class="d-block" style="font-family: 'Open Sans', sans-serif;">Talento colombiano</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="400">
                             <div class="text-center">
-                                <i class="fas fa-leaf fs-4 text-warning mb-2"></i>
-                                <small class="d-block">Compromiso ambiental</small>
+                                <i class="fas fa-leaf fs-4 mb-2" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
+                                <small class="d-block" style="font-family: 'Open Sans', sans-serif;">Compromiso ambiental</small>
                             </div>
                         </div>
                         <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="450">
                             <div class="text-center">
-                                <i class="fas fa-star fs-4 text-warning mb-2"></i>
-                                <small class="d-block">Calidad y excelencia</small>
+                                <i class="fas fa-star fs-4 mb-2" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
+                                <small class="d-block" style="font-family: 'Open Sans', sans-serif;">Calidad y excelencia</small>
                             </div>
                         </div>
                     </div>
                     
                     <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="500">
-                        <a href="#productos" class="btn btn-warning btn-lg px-4 py-3 fw-semibold">Conoce nuestros productos</a>
-                        <a href="#contacto" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold">Solicita tu cotización</a>
+                        <a href="#productos" class="btn btn-warning btn-lg px-4 py-3 fw-semibold" style="font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">Conoce nuestros productos</a>
+                        <a href="#contacto" class="btn btn-outline-light btn-lg px-4 py-3 fw-semibold" style="font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-width: 2px;">Solicita tu cotización</a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="position-absolute bottom-0 start-50 translate-middle-x mb-4">
             <div class="scroll-indicator text-center">
-                <i class="fas fa-chevron-down fs-5 text-warning animate-bounce"></i>
+                <i class="fas fa-chevron-down fs-5 animate-bounce" style="color: #16A085; text-shadow: 0 2px 8px rgba(0,0,0,0.8);"></i>
             </div>
         </div>
     </section>
@@ -246,8 +255,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-                    <h2 class="display-5 fw-bold text-primary mb-4">DONDE LA ELEGANCIA SE ENCUENTRA CON LA FUNCIONALIDAD</h2>
-                    <p class="lead text-muted">
+                    <h2 class="display-5 fw-bold mb-4" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">DONDE LA ELEGANCIA SE ENCUENTRA CON LA FUNCIONALIDAD</h2>
+                    <p class="lead" style="color: #5D4037; font-family: 'Open Sans', sans-serif;">
                         Transformamos espacios en experiencias únicas. Con más de dos décadas de maestría artesanal, cada mueble que creamos cuenta una historia de excelencia, innovación y pasión por el diseño colombiano.
                     </p>
                 </div>
@@ -298,8 +307,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-                    <h2 class="display-5 fw-bold text-primary mb-4">¿Por Qué Elegirnos?</h2>
-                    <p class="lead text-muted">Descubre nuestras ventajas competitivas</p>
+                    <h2 class="display-5 fw-bold mb-4" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">¿Por Qué Elegirnos?</h2>
+                    <p class="lead" style="color: #5D4037; font-family: 'Open Sans', sans-serif;">Descubre nuestras ventajas competitivas</p>
                 </div>
             </div>
             <div class="row g-4">
@@ -353,91 +362,264 @@
 
 
 
-    <!-- FAQ Section -->
-    <section id="faq" class="py-5 bg-light">
+    <!-- Unified FAQ & Contact Section -->
+    <section id="faq" class="py-5" style="background: linear-gradient(135deg, #F8F9FA 0%, #ECF0F1 100%);">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5">
-                    <h2 class="display-5 fw-bold text-primary mb-4">Preguntas Frecuentes</h2>
-                    <p class="lead text-muted">Resolvemos tus dudas más comunes</p>
+                    <h2 class="display-5 fw-bold mb-4" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">Preguntas Frecuentes</h2>
+                    <p class="lead" style="color: #5D4037; font-family: 'Open Sans', sans-serif;">Resolvemos tus dudas más comunes</p>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-8 mx-auto">
+                <div class="col-lg-10 mx-auto">
                     <div class="accordion" id="faqAccordion" data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100">
-                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="150">
+
+                        <!-- FAQ 1: Modular -->
+                        <div class="accordion-item border-0 shadow-sm mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="150">
                             <h2 class="accordion-header" id="faq1">
-                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1">
-                                    ¿Qué significa 'modular'?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="false" aria-controls="collapse1" style="background: white; color: #2C3E50; border: 1px solid #BDC3C7;">
+                                    <i class="fas fa-cubes me-3" style="color: #16A085;"></i>¿Qué significa 'modular'?
                                 </button>
                             </h2>
                             <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    Significa que nuestros muebles están compuestos por módulos independientes que puedes combinar y reorganizar según tus necesidades, ofreciendo flexibilidad y personalización.
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <p class="text-muted mb-4">Significa que nuestros muebles están compuestos por módulos independientes que puedes combinar y reorganizar según tus necesidades, ofreciendo flexibilidad y personalización.</p>
+                                            <div class="bg-light p-3 rounded">
+                                                <h6 class="fw-bold text-primary mb-2"><i class="fas fa-lightbulb me-2"></i>Ventajas del sistema modular:</h6>
+                                                <ul class="text-muted small mb-0">
+                                                    <li>Adaptable a cualquier espacio</li>
+                                                    <li>Fácil de modificar en el futuro</li>
+                                                    <li>Componentes intercambiables</li>
+                                                    <li>Máxima optimización del espacio</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); color: white;">
+                                                <div class="card-body text-center p-4">
+                                                    <i class="fas fa-comments fs-1 mb-3" style="color: #16A085;"></i>
+                                                    <h6 class="fw-bold mb-3 text-white">¿Necesitas asesoría?</h6>
+                                                    <p class="small mb-3 opacity-75 text-white">Nuestros expertos pueden ayudarte a diseñar la configuración perfecta para tu espacio.</p>
+                                                    <button class="btn btn-sm w-100 tex" onclick="openContextualContact('Diseño modular personalizado')" style="background: #16A085; color: white; border: none;">
+                                                        <i class="fas fa-envelope me-2"></i>Consultar diseño
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
+
+                        <!-- FAQ 2: Personalización -->
+                        <div class="accordion-item border-0 shadow-sm mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="200">
                             <h2 class="accordion-header" id="faq2">
-                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-                                    ¿Puedo personalizar las medidas y colores?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2" style="background: white; color: #2C3E50; border: 1px solid #BDC3C7;">
+                                    <i class="fas fa-palette me-3" style="color: #16A085;"></i>¿Puedo personalizar las medidas y colores?
                                 </button>
                             </h2>
                             <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    ¡Sí! Ofrecemos una amplia gama de acabados y colores. Además, podemos adaptar las medidas de muchos de nuestros muebles a tu espacio. Contáctanos para más detalles.
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <p class="text-muted mb-4">¡Sí! Ofrecemos una amplia gama de acabados y colores. Además, podemos adaptar las medidas de muchos de nuestros muebles a tu espacio específico.</p>
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <div class="bg-light p-3 rounded text-center">
+                                                        <i class="fas fa-swatchbook fs-2 text-primary mb-2"></i>
+                                                        <h6 class="fw-bold">Colores disponibles</h6>
+                                                        <small class="text-muted">Madera natural, blanca, negra, y colores personalizados</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="bg-light p-3 rounded text-center">
+                                                        <i class="fas fa-ruler fs-2 text-primary mb-2"></i>
+                                                        <h6 class="fw-bold">Medidas personalizadas</h6>
+                                                        <small class="text-muted">Adaptamos cada pieza a tu espacio exacto</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #16A085 0%, #1ABC9C 100%); color: white;">
+                                                <div class="card-body text-center p-4">
+                                                    <i class="fas fa-palette fs-1 mb-3"></i>
+                                                    <h6 class="fw-bold mb-3 text-white">¿Quieres ver opciones?</h6>
+                                                    <p class="small mb-3 opacity-75 text-white">Te mostramos muestras y configuraciones personalizadas.</p>
+                                                    <button class="btn btn-sm w-100" onclick="openContextualContact('Personalización de colores y medidas')" style="background: #2C3E50; color: white; border: none;">
+                                                        <i class="fas fa-brush me-2"></i>Solicitar muestras
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="250">
+
+                        <!-- FAQ 3: Montaje -->
+                        <div class="accordion-item border-0 shadow-sm mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="250">
                             <h2 class="accordion-header" id="faq3">
-                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-                                    ¿Incluyen el servicio de montaje e instalación?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3" style="background: white; color: #2C3E50; border: 1px solid #BDC3C7;">
+                                    <i class="fas fa-tools me-3" style="color: #16A085;"></i>¿Incluyen el servicio de montaje e instalación?
                                 </button>
                             </h2>
                             <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    Ofrecemos el servicio de montaje e instalación en nuestra área de cobertura. Consulta con nuestro equipo si tu ubicación está incluida y las tarifas aplicables.
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <p class="text-muted mb-4">Ofrecemos el servicio de montaje e instalación profesional en nuestra área de cobertura. Nuestros técnicos especializados garantizan un resultado perfecto.</p>
+                                            <div class="bg-light p-3 rounded">
+                                                <h6 class="fw-bold text-primary mb-2"><i class="fas fa-check-circle me-2"></i>Servicio incluye:</h6>
+                                                <ul class="text-muted small mb-0">
+                                                    <li>Montaje profesional por técnicos certificados</li>
+                                                    <li>Instalación en el lugar definitivo</li>
+                                                    <li>Nivelación y ajuste perfecto</li>
+                                                    <li>Limpieza del área de trabajo</li>
+                                                    <li>Garantía del trabajo realizado</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%); color: white;">
+                                                <div class="card-body text-center p-4">
+                                                    <i class="fas fa-wrench fs-1 mb-3"></i>
+                                                    <h6 class="fw-bold mb-3 text-white">¿Necesitas instalación?</h6>
+                                                    <p class="small mb-3 opacity-75 text-white">Consulta disponibilidad y tarifas para tu zona.</p>
+                                                    <button class="btn btn-sm w-100" onclick="openContextualContact('Servicio de montaje e instalación')" style="background: #2C3E50; color: white; border: none;">
+                                                        <i class="fas fa-calendar-check me-2"></i>Agendar instalación
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
+
+                        <!-- FAQ 4: Tiempos de entrega -->
+                        <div class="accordion-item border-0 shadow-sm mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="300">
                             <h2 class="accordion-header" id="faq4">
-                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-                                    ¿Cuál es el tiempo de entrega aproximado?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4" style="background: white; color: #2C3E50; border: 1px solid #BDC3C7;">
+                                    <i class="fas fa-clock me-3" style="color: #16A085;"></i>¿Cuál es el tiempo de entrega aproximado?
                                 </button>
                             </h2>
                             <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="faq4" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    El tiempo de entrega varía según el producto y la personalización. Generalmente, oscila entre 2 y 4 semanas. Te daremos una fecha estimada al momento de tu compra.
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <p class="text-muted mb-4">El tiempo de entrega varía según el producto y la personalización. Generalmente, oscila entre 2 y 4 semanas. Te daremos una fecha estimada al momento de tu compra.</p>
+                                            <div class="row g-3">
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-3 bg-light rounded">
+                                                        <i class="fas fa-rocket fs-2 text-success mb-2"></i>
+                                                        <h6 class="fw-bold">2-3 semanas</h6>
+                                                        <small class="text-muted">Productos estándar</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-3 bg-light rounded">
+                                                        <i class="fas fa-cog fs-2 text-warning mb-2"></i>
+                                                        <h6 class="fw-bold">3-4 semanas</h6>
+                                                        <small class="text-muted">Productos personalizados</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="text-center p-3 bg-light rounded">
+                                                        <i class="fas fa-star fs-2 text-primary mb-2"></i>
+                                                        <h6 class="fw-bold">Premium</h6>
+                                                        <small class="text-muted">Acabados especiales</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); color: white;">
+                                                <div class="card-body text-center p-4">
+                                                    <i class="fas fa-calendar-alt fs-1 mb-3"></i>
+                                                    <h6 class="fw-bold mb-3 text-white">¿Urgencia?</h6>
+                                                    <p class="small mb-3 opacity-75 text-white">Consulta opciones de entrega express para proyectos especiales.</p>
+                                                    <button class="btn btn-sm w-100" onclick="openContextualContact('Consulta de tiempos de entrega')" style="background: #16A085; color: white; border: none;">
+                                                        <i class="fas fa-bolt me-2"></i>Consulta rápida
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item border-0 shadow-sm mb-3" data-aos="fade-right" data-aos-duration="800" data-aos-delay="350">
+
+                        <!-- FAQ 5: Envíos -->
+                        <div class="accordion-item border-0 shadow-sm mb-4" data-aos="fade-right" data-aos-duration="800" data-aos-delay="350">
                             <h2 class="accordion-header" id="faq5">
-                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5">
-                                    ¿Hacen envíos a toda el país?
+                                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5" aria-expanded="false" aria-controls="collapse5" style="background: white; color: #2C3E50; border: 1px solid #BDC3C7;">
+                                    <i class="fas fa-truck me-3" style="color: #16A085;"></i>¿Hacen envíos a toda el país?
                                 </button>
                             </h2>
                             <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="faq5" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-muted">
-                                    Sí, realizamos envíos a las principales ciudades del país a través de transportadoras aliadas. El costo del envío se calcula al finalizar la compra.
+                                <div class="accordion-body">
+                                    <div class="row">
+                                        <div class="col-lg-8">
+                                            <p class="text-muted mb-4">Sí, realizamos envíos a las principales ciudades del país a través de transportadoras aliadas. El costo del envío se calcula al finalizar la compra y depende del volumen y destino.</p>
+                                            <div class="bg-light p-3 rounded">
+                                                <h6 class="fw-bold text-primary mb-2"><i class="fas fa-shield-alt me-2"></i>Garantía de entrega:</h6>
+                                                <ul class="text-muted small mb-0">
+                                                    <li>Embalaje profesional anti-golpes</li>
+                                                    <li>Seguimiento en tiempo real</li>
+                                                    <li>Seguro contra daños en transporte</li>
+                                                    <li>Entrega programada según tu disponibilidad</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card border-0 h-100" style="background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); color: white;">
+                                                <div class="card-body text-center p-4">
+                                                    <i class="fas fa-map-marked-alt fs-1 mb-3" style="color: #16A085;"></i>
+                                                    <h6 class="fw-bold mb-3 text-white">¿Dónde necesitas entrega?</h6>
+                                                    <p class="small mb-3 opacity-75 text-white">Calculamos costo y tiempo de envío para tu ubicación específica.</p>
+                                                    <button class="btn btn-sm w-100" onclick="openContextualContact('Consulta de envío y entrega')" style="background: #16A085; color: white; border: none;">
+                                                        <i class="fas fa-calculator me-2"></i>Calcular envío
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
+
+                    <!-- General Contact CTA -->
+                    <div class="text-center mt-5" data-aos="zoom-in" data-aos-duration="800" data-aos-delay="400">
+                        <div class="card border-0 shadow-lg" style="background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); color: white;">
+                            <div class="card-body p-5">
+                                <i class="fas fa-question-circle fs-1 mb-3" style="color: #16A085;"></i>
+                                <h4 class="fw-bold mb-3 text-white">¿No encontraste tu respuesta?</h4>
+                                <p class="mb-4 opacity-75 text-white">Nuestro equipo de expertos está listo para ayudarte con cualquier duda específica sobre tu proyecto.</p>
+                                <button class="btn btn-lg px-5" onclick="openGeneralContact()" style="background: #16A085; color: white; border: none;">
+                                    <i class="fas fa-envelope me-2"></i>Contactar con un experto
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Products Section -->
-    <section id="productos" class="py-5">
+    <section id="productos" class="py-5" style="background: linear-gradient(135deg, #ECF0F1 0%, #F8F9FA 100%);">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-                    <h2 class="display-5 fw-bold text-primary mb-4">Nuestros Productos</h2>
-                    <p class="lead text-muted">Mobiliario que define tendencias y espacios</p>
+                    <h2 class="display-5 fw-bold mb-4" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">Nuestros Productos</h2>
+                    <p class="lead" style="color: #5D4037; font-family: 'Open Sans', sans-serif;">Mobiliario que define tendencias y espacios</p>
                 </div>
             </div>
             
@@ -457,12 +639,12 @@
                 {% for categoria in categorias %}
                 <div class="category-section mb-5" data-category-name="{{ categoria.nombre|lower|slugify }}">
                     <div class="text-center mb-4">
-                        <h3 class="h2 fw-bold text-primary mb-3">
-                            <i class="fas fa-cube me-2"></i>
+                        <h3 class="h2 fw-bold mb-3" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">
+                            <i class="fas fa-cube me-2" style="color: #16A085;"></i>
                             {{ categoria.nombre|upper }}
                         </h3>
                         <p class="text-muted">{{ categoria.descripcion|default:"Explora nuestra colección de muebles modulares" }}</p>
-                        <button class="btn btn-outline-primary d-lg-none mobile-category-toggle" data-category="{{ categoria.nombre|lower|slugify }}">
+                        <button class="btn d-lg-none mobile-category-toggle" data-category="{{ categoria.nombre|lower|slugify }}" style="background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%); color: white; border: none;">
                             <span class="toggle-text">Ver productos</span>
                             <i class="fas fa-chevron-down ms-2 toggle-icon"></i>
                         </button>
@@ -481,43 +663,54 @@
                         
                         <div class="row g-4 products-grid">
                             {% for subcategoria in categoria.subcategoria_set.all %}
-                            <div class="col-lg-4 col-md-6 product-card {% if not forloop.first %}d-none{% endif %}" 
-                                 data-subcategoria-id="{{ subcategoria.id }}" 
-                                 data-category="{{ categoria.nombre|lower|slugify }}" 
+                            <div class="col-lg-4 col-xl-3 product-card {% if not forloop.first %}d-none{% endif %}"
+                                 data-subcategoria-id="{{ subcategoria.id }}"
+                                 data-category="{{ categoria.nombre|lower|slugify }}"
                                  data-subcategoria="{{ subcategoria.nombre|lower|slugify }}"
                                  data-aos="fade-up" data-aos-duration="800" data-aos-delay="100">
-                                <div class="card border-0 shadow-sm h-100 position-relative overflow-hidden">
+                                <div class="card border-0 shadow-lg h-100 position-relative overflow-hidden" style="background: white; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);">
                                     <div class="position-relative">
                                         {% with foto_destacada=fotos_destacadas|get_item:subcategoria.id %}
                                             {% if foto_destacada %}
-                                                <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 250px; object-fit: cover;" loading="lazy">
+                                                <img src="{{ foto_destacada.imagen.url }}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" loading="lazy">
                                             {% else %}
-                                                <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 250px; object-fit: cover;" loading="lazy">
+                                                <img src="{% static 'images/productos/default.svg' %}" alt="{{ subcategoria.nombre }}" class="card-img-top" style="height: 280px; object-fit: cover; transition: transform 0.4s ease;" loading="lazy">
                                             {% endif %}
                                         {% endwith %}
-                                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center opacity-0 product-overlay" style="transition: opacity 0.3s ease;">
-                                            <div class="d-flex flex-column gap-2">
-                                                <button class="btn btn-light btn-sm btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}">
-                                                    <i class="fas fa-images me-1"></i>Ver fotos
+                                        <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center opacity-0 product-overlay" style="background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(52, 73, 94, 0.9)); transition: opacity 0.3s ease;">
+                                            <div class="d-flex flex-column gap-3 text-center">
+                                                <button class="btn btn-lg btn-ver-fotos" data-subcategoria-id="{{ subcategoria.id }}" style="background: #16A085; color: white; border: none; padding: 12px 24px;">
+                                                    <i class="fas fa-images me-2"></i>Ver galería completa
                                                 </button>
-                                                <button class="btn btn-outline-light btn-sm btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}">
-                                                    <i class="fas fa-calculator me-1"></i>Cotizar
+                                                <button class="btn btn-outline-light btn-lg btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}" style="border-color: white; color: white; padding: 12px 24px;">
+                                                    <i class="fas fa-calculator me-2"></i>Solicitar cotización
                                                 </button>
                                             </div>
                                         </div>
-                                        <span class="position-absolute top-0 end-0 badge bg-primary m-2">{{ categoria.nombre }}</span>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title fw-bold">{{ subcategoria.nombre }}</h5>
-                                        <p class="card-text text-muted small">{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos" }}</p>
-                                        <div class="d-flex gap-1 flex-wrap">
-                                            <span class="badge bg-light text-dark">
-                                                <i class="fas fa-palette me-1"></i>Personalizable
-                                            </span>
-                                            <span class="badge bg-light text-dark">
-                                                <i class="fas fa-tools me-1"></i>Modular
-                                            </span>
+                                        <div class="position-absolute top-0 end-0 m-3">
+                                            <span class="badge px-3 py-2 fs-6" style="background: linear-gradient(135deg, #2C5530 0%, #1B2A1F 100%); color: white; font-family: 'Montserrat', sans-serif;">{{ categoria.nombre }}</span>
                                         </div>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title fw-bold mb-3" style="color: #2C3E50;">{{ subcategoria.nombre }}</h5>
+                                        <p class="card-text text-muted mb-4 lh-base" style="color: #7F8C8D;">{{ subcategoria.descripcion|default:"Descubre nuestros diseños únicos y funcionales" }}</p>
+                                        <div class="row g-2 mb-4">
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center p-1 rounded" style="background: linear-gradient(135deg, #E8F4F8 0%, #ECF0F1 100%);">
+                                                    <i class="fas fa-palette me-1" style="color: #2C3E50; font-size: 0.8rem;"></i>
+                                                    <small style="color: #2C3E50; font-size: 0.75rem;">Personalizable</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="d-flex align-items-center p-1 rounded" style="background: linear-gradient(135deg, #E8F4F8 0%, #ECF0F1 100%);">
+                                                    <i class="fas fa-tools me-1" style="color: #2C3E50; font-size: 0.8rem;"></i>
+                                                    <small style="color: #2C3E50; font-size: 0.75rem;">Modular</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="btn w-100 btn-cotizar" data-subcategoria="{{ subcategoria.nombre }}" style="background: #16A085; color: white; border: none;">
+                                            <i class="fas fa-calculator me-2"></i>Solicitar cotización
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -579,8 +772,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 mx-auto text-center mb-5" data-aos="fade-up" data-aos-duration="1000">
-                    <h2 class="display-5 fw-bold text-primary mb-4">Diseñemos juntos tu espacio ideal</h2>
-                    <p class="lead text-muted">Recibe asesoría personalizada y cotiza sin compromiso</p>
+                    <h2 class="display-5 fw-bold mb-4" style="color: #2C5530; font-family: 'Montserrat', sans-serif;">Diseñemos juntos tu espacio ideal</h2>
+                    <p class="lead" style="color: #5D4037; font-family: 'Open Sans', sans-serif;">Recibe asesoría personalizada y cotiza sin compromiso</p>
                 </div>
             </div>
             
@@ -728,16 +921,13 @@
                         Más de 20 años creando muebles modulares de alta calidad para hogar y empresa. Diseño, funcionalidad y excelencia en cada proyecto.
                     </p>
                     <div class="d-flex gap-2">
-                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Facebook">
+                        <a href="https://www.facebook.com/people/VM-Modulares/100065150425402/" target="_blank" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Instagram">
+                        <a href="https://www.instagram.com/vm_modulares/" target="_blank" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="#" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="WhatsApp">
+                        <a href="https://wa.me/573107598740?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20muebles%20modulares" target="_blank" class="btn btn-outline-light btn-sm rounded-circle" style="width: 40px; height: 40px;" aria-label="WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>

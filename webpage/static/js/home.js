@@ -1077,6 +1077,168 @@ class BootstrapApp {
     }
 }
 
+// ===== FUNCIONES PARA CONTACTO CONTEXTUAL =====
+function openContextualContact(subject) {
+    // Abrir modal de contacto con asunto pre-llenado
+    const contactModal = document.getElementById('contextualContactModal');
+    if (contactModal) {
+        contactModal.remove();
+    }
+
+    const modalHTML = `
+        <div class="modal fade" id="contextualContactModal" tabindex="-1" aria-labelledby="contextualContactModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="contextualContactModalLabel">
+                            <i class="fas fa-envelope me-2"></i>${subject}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form class="contextual-contact-form">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Nombre completo *</label>
+                                    <input type="text" class="form-control" name="nombre" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Email *</label>
+                                    <input type="email" class="form-control" name="email" required>
+                                </div>
+                            </div>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Teléfono</label>
+                                    <input type="tel" class="form-control" name="telefono">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">Asunto</label>
+                                    <input type="text" class="form-control" name="asunto" value="${subject}" readonly>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label fw-semibold">Mensaje *</label>
+                                <textarea class="form-control" name="mensaje" rows="4" placeholder="Cuéntanos los detalles de tu consulta..." required></textarea>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label fw-semibold">Código de verificación *</label>
+                                <div class="d-flex align-items-center gap-2 mb-2 p-2 bg-light rounded">
+                                    <input type="hidden" name="captcha_0" value="{{ captcha_key }}">
+                                    <img src="{{ captcha_image }}" alt="Captcha" class="captcha-image" id="contextual-captcha-image" style="max-height: 40px;">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="refreshContextualCaptcha()" title="Generar nuevo código">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control" name="captcha_1" placeholder="Ingrese el código mostrado" required autocomplete="off">
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">
+                                    <span class="btn-text">
+                                        <i class="fas fa-paper-plane me-2"></i>Enviar consulta
+                                    </span>
+                                    <span class="btn-loading d-none">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Enviando...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+    const modal = new bootstrap.Modal(document.getElementById('contextualContactModal'));
+    modal.show();
+
+    // Configurar envío del formulario
+    const form = document.querySelector('.contextual-contact-form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        // Validación básica
+        if (!form.nombre.value.trim() || !form.email.value.trim() || !form.mensaje.value.trim()) {
+            Utils.showToast('Por favor, completa todos los campos requeridos.', 'error');
+            return;
+        }
+
+        // Set loading state
+        submitBtn.disabled = true;
+        submitBtn.classList.add('btn-loading');
+
+        try {
+            const response = await fetch('/contacto/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': window.vmApp?.components?.contactForm?.getCSRFToken() || ''
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                Utils.showToast('¡Consulta enviada! Te contactaremos pronto.', 'success');
+                modal.hide();
+                form.reset();
+            } else {
+                Utils.showToast(result.message || 'Error al enviar la consulta.', 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Utils.showToast('Error al enviar la consulta.', 'error');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+        }
+    });
+
+    // Limpiar modal después de cerrarlo
+    document.getElementById('contextualContactModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}
+
+function openGeneralContact() {
+    // Hacer scroll suave a la sección de contacto
+    const contactoSection = document.querySelector('#contacto');
+    if (contactoSection) {
+        Utils.smoothScrollTo(contactoSection, 800);
+
+        // Resaltar la sección brevemente
+        contactoSection.style.background = 'linear-gradient(135deg, rgba(212, 184, 150, 0.1), rgba(92, 75, 55, 0.05))';
+        setTimeout(() => {
+            contactoSection.style.background = '';
+        }, 2000);
+    }
+}
+
+function refreshContextualCaptcha() {
+    fetch('/captcha/refresh/', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const captchaImage = document.getElementById('contextual-captcha-image');
+        if (captchaImage && data.image_url) {
+            captchaImage.src = data.image_url;
+        }
+    })
+    .catch(error => {
+        console.error('Error al refrescar captcha:', error);
+    });
+}
+
 // ===== FUNCIONES GLOBALES PARA CAPTCHA =====
 function refreshCaptcha() {
     fetch('/captcha/refresh/', {

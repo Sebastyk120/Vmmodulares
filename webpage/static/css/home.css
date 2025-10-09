@@ -2,20 +2,30 @@
 
 /* ===== CUSTOM VARIABLES ===== */
 :root {
-    /* Custom colors that complement Bootstrap */
-    --vm-primary: #2c3e50;
-    --vm-secondary: #34495e;
-    --vm-accent: #e74c3c;
-    --vm-warning: #f39c12;
-    --vm-success: #27ae60;
-    
-    /* Custom fonts */
-    --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-display: 'Playfair Display', Georgia, serif;
-    
-    /* Custom shadows */
-    --shadow-custom: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+    /* Modern furniture color palette */
+    --vm-primary: #2C3E50;        /* Deep navy blue - Professional, trustworthy */
+    --vm-secondary: #34495E;      /* Charcoal gray - Neutral, sophisticated */
+    --vm-accent: #16A085;         /* Teal green - Natural, calming accent */
+    --vm-warning: #E8F4F8;        /* Soft ice blue - Elegant light tone */
+    --vm-success: #27AE60;        /* Natural green - Fresh, organic feel */
+    --vm-light-bg: #ECF0F1;       /* Light gray - Clean, modern background */
+
+    /* SISTEMA TIPOGRÁFICO UNIFICADO Y PROFESIONAL */
+    --font-primary: 'Montserrat', sans-serif;     /* Encabezados - Moderna y legible */
+    --font-secondary: 'Open Sans', sans-serif;    /* Texto cuerpo - Clara y profesional */
+    --font-accent: 'Playfair Display', serif;     /* Elementos premium - Elegante */
+
+    /* PALETA DE COLORES PARA TEXTO PROFESIONAL */
+    --text-primary: #2C5530;      /* Verde oscuro maderoso - Principal */
+    --text-secondary: #5D4037;    /* Marrón madera - Secundario */
+    --text-light: #8D6E63;        /* Madera clara - Textos complementarios */
+    --text-dark: #1B2A1F;         /* Verde muy oscuro - Hero section */
+    --text-white: #FFFFFF;        /* Texto sobre fondos oscuros */
+
+    /* Enhanced shadows for modern luxury feel */
+    --shadow-custom: 0 4px 20px rgba(44, 62, 80, 0.15);
+    --shadow-hover: 0 8px 30px rgba(44, 62, 80, 0.25);
+    --shadow-soft: 0 2px 10px rgba(44, 62, 80, 0.1);
 }
 
 /* ===== GLOBAL OVERRIDES ===== */
@@ -28,110 +38,170 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===== IMPROVED TYPOGRAPHY ===== */
+/* ===== SISTEMA TIPOGRÁFICO PROFESIONAL UNIFICADO ===== */
 h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-family: var(--font-primary);
+    font-weight: 600;
     line-height: 1.2;
     margin-bottom: 1rem;
-    text-wrap: balance; /* Mejor equilibrio de texto */
+    text-wrap: balance;
+    color: var(--text-primary);
 }
 
+/* ESCALA TIPOGRÁFICA JERÁRQUICA PROFESIONAL */
 h1 {
-    font-size: 3.5rem;
+    font-size: 3.5rem;        /* Título principal hero */
+    font-weight: 700;
     letter-spacing: -1px;
+    color: var(--text-dark);
 }
 
 h2 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;        /* Títulos de sección */
+    font-weight: 600;
     letter-spacing: -0.5px;
+    color: var(--text-primary);
 }
 
 h3 {
-    font-size: 2.2rem;
+    font-size: 2rem;          /* Subtítulos */
+    font-weight: 600;
     letter-spacing: -0.3px;
+    color: var(--text-secondary);
 }
 
 h4 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;        /* Encabezados menores */
+    font-weight: 500;
     letter-spacing: -0.2px;
+    color: var(--text-secondary);
 }
 
+h5 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+h6 {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+/* DISPLAY HEADINGS PROFESIONALES */
 .display-1 {
-    font-size: 5rem;
+    font-size: 4.5rem;        /* Título hero principal */
     font-weight: 800;
     letter-spacing: -2px;
     line-height: 1.1;
+    color: var(--text-dark);
+    font-family: var(--font-accent);
 }
 
 .display-2 {
-    font-size: 4.5rem;
-    font-weight: 800;
+    font-size: 3.5rem;        /* Títulos hero secundarios */
+    font-weight: 700;
     letter-spacing: -1.5px;
     line-height: 1.1;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
 }
 
 .display-3 {
-    font-size: 4rem;
+    font-size: 3rem;          /* Títulos principales secciones */
     font-weight: 700;
     letter-spacing: -1px;
     line-height: 1.2;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
 }
 
 .display-4 {
-    font-size: 3.5rem;
-    font-weight: 700;
+    font-size: 2.5rem;        /* Subtítulos importantes */
+    font-weight: 600;
     letter-spacing: -0.8px;
     line-height: 1.2;
+    color: var(--text-secondary);
+    font-family: var(--font-primary);
 }
 
 .display-5 {
-    font-size: 3rem;
+    font-size: 2rem;          /* Títulos medianos */
     font-weight: 600;
     letter-spacing: -0.5px;
     line-height: 1.3;
+    color: var(--text-secondary);
+    font-family: var(--font-primary);
 }
 
 .display-6 {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 1.75rem;       /* Títulos pequeños */
+    font-weight: 500;
     letter-spacing: -0.3px;
     line-height: 1.3;
+    color: var(--text-light);
+    font-family: var(--font-primary);
 }
 
+/* TEXTO CUERPO PROFESIONAL */
 .lead {
-    font-size: 1.4rem;
+    font-size: 1.25rem;       /* Texto destacado */
     font-weight: 400;
     line-height: 1.6;
-    color: #4a5568;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
 }
 
 p {
     margin-bottom: 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1.125rem;      /* Texto normal */
     line-height: 1.7;
-}
-
-.text-muted {
-    color: #718096 !important;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
     font-weight: 400;
 }
 
-.font-display {
-    font-family: var(--font-display);
+small {
+    font-size: 0.875rem;      /* Texto secundario */
+    color: var(--text-light);
+    font-family: var(--font-secondary);
 }
 
-/* ===== TEXT UTILITIES ===== */
+.text-muted {
+    color: var(--text-light) !important;
+    font-weight: 400;
+    font-family: var(--font-secondary);
+}
+
+/* FUENTE DISPLAY PARA ELEMENTOS ESPECIALES */
+.font-display {
+    font-family: var(--font-accent);
+}
+
+.font-primary {
+    font-family: var(--font-primary);
+}
+
+.font-secondary {
+    font-family: var(--font-secondary);
+}
+
+/* ===== TEXT UTILITIES PROFESIONALES ===== */
 .text-gradient {
-    background: linear-gradient(135deg, var(--vm-primary), var(--vm-accent));
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-strong {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .letter-spacing-wide {
@@ -142,16 +212,84 @@ p {
     letter-spacing: -0.02em;
 }
 
+/* ===== HERO SECTION - CONTRASTE ÓPTIMO ===== */
+.hero h1,
+.hero .display-1 {
+    color: #FFFFFF !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(0, 0, 0, 0.4);
+    font-weight: 800;
+}
+
+.hero .lead {
+    color: #FFFFFF !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.hero .display-4 {
+    color: #FFFFFF !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.6);
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 0;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.hero small {
+    color: #FFFFFF !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* ===== PROFESIONAL TEXT COLORS ===== */
+.text-primary {
+    color: var(--text-primary) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-light {
+    color: var(--text-light) !important;
+}
+
+.text-dark {
+    color: var(--text-dark) !important;
+}
+
+.text-white {
+    color: var(--text-white) !important;
+}
+
 /* ===== CUSTOM BOOTSTRAP THEME ===== */
 .btn-primary {
-    background: linear-gradient(135deg, var(--vm-accent) 0%, #c0392b 100%);
-    border-color: var(--vm-accent);
+    background: linear-gradient(135deg, var(--vm-primary) 0%, var(--vm-secondary) 100%);
+    border-color: var(--vm-primary);
     font-weight: 500;
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #c0392b 0%, var(--vm-accent) 100%);
-    border-color: #c0392b;
+    background: linear-gradient(135deg, var(--vm-secondary) 0%, var(--vm-primary) 100%);
+    border-color: var(--vm-secondary);
     transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
 }
@@ -165,7 +303,7 @@ p {
 }
 
 .text-warning {
-    color: var(--vm-warning) !important;
+    color: var(--vm-accent) !important;
 }
 
 .text-danger {
@@ -190,36 +328,108 @@ p {
 }
 
 .hero-overlay {
-    background: linear-gradient(135deg, rgba(44, 62, 80, 0.8) 0%, rgba(52, 73, 94, 0.9) 100%);
+    background: rgba(0, 0, 0, 0.6);
 }
 
-/* ===== PRODUCT CARDS CUSTOM STYLES ===== */
+/* ===== HERO FEATURES - MEJOR CONTRASTE ===== */
+.hero .text-center small {
+    color: #FFFFFF !important;
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+    font-weight: 500;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    display: inline-block;
+    min-width: 120px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.hero .text-center i {
+    text-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== PRODUCT CARDS CUSTOM STYLES PROFESIONALES ===== */
 .product-card .card {
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(44, 85, 48, 0.1);
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
 }
 
 .product-card .card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-hover);
-    border-color: rgba(231, 76, 60, 0.2);
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(44, 85, 48, 0.2);
+    border-color: rgba(27, 42, 31, 0.3);
+}
+
+.product-card .card:hover img {
+    transform: scale(1.05);
 }
 
 .product-overlay {
     transition: opacity 0.3s ease;
+    background: linear-gradient(135deg, rgba(44, 85, 48, 0.9), rgba(27, 42, 31, 0.9)) !important;
+    backdrop-filter: blur(5px);
 }
 
 .product-card:hover .product-overlay {
     opacity: 1 !important;
 }
 
+.product-card .card-title {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.product-card .card-text {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
+}
+
+.product-overlay .btn {
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.product-overlay .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    background: var(--vm-warning) !important;
+    border-color: var(--vm-warning) !important;
+    color: var(--vm-primary) !important;
+}
+
+/* ===== PRODUCT CARD FEATURE BUTTONS ===== */
+.product-card .feature-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.product-card .feature-btn i {
+    font-size: 0.8rem;
+}
+
+/* Ajuste del espaciado para características */
+.product-card .d-flex.align-items-center {
+    padding: 0.25rem 0.5rem !important;
+}
+
+.product-card .d-flex.align-items-center i {
+    font-size: 0.8rem !important;
+}
+
 /* ===== CATEGORY FILTER BUTTONS ===== */
 .category-filter-btn.active {
-    background: linear-gradient(135deg, var(--vm-accent), var(--vm-primary)) !important;
-    border-color: var(--vm-accent) !important;
+    background: linear-gradient(135deg, var(--vm-primary), var(--vm-secondary)) !important;
+    border-color: var(--vm-primary) !important;
     color: white !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
 }
 
 .subcategory-tab.btn-primary {
@@ -239,11 +449,214 @@ p {
     border-bottom: none;
 }
 
-/* ===== FORM CUSTOM STYLES ===== */
+.modal-title,
+.modal-header h5 {
+    color: white !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+/* ===== FORM CUSTOM STYLES PROFESIONALES ===== */
 .form-control:focus,
 .form-select:focus {
-    border-color: var(--vm-accent);
-    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.25);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    font-family: var(--font-secondary);
+    color: var(--text-secondary);
+}
+
+.form-control::placeholder {
+    color: var(--text-light);
+    font-family: var(--font-secondary);
+}
+
+/* ===== FAQ ACCORDION ENHANCED STYLES PROFESIONALES ===== */
+.accordion-button {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%) !important;
+    border: 1px solid rgba(44, 85, 48, 0.1) !important;
+    transition: all 0.3s ease;
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-dark) 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(44, 85, 48, 0.2);
+}
+
+.accordion-button:focus {
+    border-color: var(--text-primary);
+    box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.25);
+}
+
+.accordion-body {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border: 1px solid rgba(44, 85, 48, 0.1);
+    border-top: none;
+    color: var(--text-secondary);
+    font-family: var(--font-secondary);
+}
+
+/* ===== CONTEXTUAL CONTACT CARDS PROFESIONALES ===== */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-dark) 100%) !important;
+}
+
+.card.bg-primary h6,
+.card.bg-primary .text-primary {
+    color: white !important;
+}
+
+.card.bg-success h6,
+.card.bg-success .text-success {
+    color: white !important;
+}
+
+.card.bg-warning h6,
+.card.bg-warning .text-warning {
+    color: var(--text-primary) !important;
+}
+
+.card.bg-info h6,
+.card.bg-info .text-info {
+    color: white !important;
+}
+
+/* ===== VENTAJAS SECTION PROFESIONAL ===== */
+#ventajas .card-title {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+#ventajas .card-text {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
+}
+
+/* ===== ENHANCED BUTTON STYLES PROFESIONALES ===== */
+.btn-warning {
+    background: linear-gradient(135deg, var(--vm-warning) 0%, #e67e22 100%);
+    border-color: var(--vm-warning);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: var(--font-primary);
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #e67e22 0%, var(--vm-warning) 100%);
+    border-color: #e67e22;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.hero .btn {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.hero .btn-outline-light {
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.hero .btn-outline-light:hover {
+    color: #2C3E50;
+    background: #FFFFFF;
+    border-color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* ===== ABOUT/NOSOTROS SECTION PROFESIONAL ===== */
+#nosotros .display-5 {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+}
+
+#nosotros .lead {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
+}
+
+#nosotros .text-muted {
+    color: var(--text-light) !important;
+    font-family: var(--font-secondary);
+}
+
+#nosotros .card-title {
+    color: var(--text-dark) !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+#nosotros .text-muted {
+    color: var(--text-light) !important;
+    font-family: var(--font-secondary);
+}
+
+/* ===== PRODUCTS SECTION PROFESIONAL ===== */
+#productos .display-5 {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+}
+
+#productos .lead {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
+}
+
+#productos .text-muted {
+    color: var(--text-light) !important;
+    font-family: var(--font-secondary);
+}
+
+#productos .h2 {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+}
+
+/* ===== FAQ SECTION PROFESIONAL ===== */
+#faq .display-5 {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+}
+
+#faq .lead {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
+}
+
+/* ===== CONTEXTUAL CONTACT FORM STYLES ===== */
+.contextual-contact-form .form-control:focus {
+    border-color: var(--vm-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(52, 73, 94, 0.25);
+}
+
+.contextual-contact-form .btn-primary {
+    background: linear-gradient(135deg, var(--vm-primary) 0%, var(--vm-secondary) 100%);
+    border-color: var(--vm-primary);
+}
+
+.contextual-contact-form .btn-primary:hover {
+    background: linear-gradient(135deg, var(--vm-secondary) 0%, var(--vm-primary) 100%);
+    border-color: var(--vm-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(92, 75, 55, 0.3);
 }
 
 .btn-loading .btn-text {
@@ -254,13 +667,13 @@ p {
     display: inline-flex !important;
 }
 
-/* ===== NAVBAR CUSTOM STYLES ===== */
+/* ===== NAVBAR CUSTOM STYLES PROFESIONALES ===== */
 .navbar {
     backdrop-filter: blur(20px);
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     background: rgba(255, 255, 255, 0.98) !important;
     box-shadow: 0 2px 30px rgba(0, 0, 0, 0.1);
-    border-bottom: 1px solid rgba(231, 76, 60, 0.1);
+    border-bottom: 1px solid rgba(44, 85, 48, 0.1);
 }
 
 .navbar.scrolled {
@@ -269,30 +682,31 @@ p {
 }
 
 .navbar-brand h1 {
-    background: linear-gradient(135deg, var(--vm-primary), var(--vm-accent));
+    background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 0;
-    font-family: var(--font-display);
+    font-family: var(--font-primary);
     font-weight: 700;
     font-size: 1.8rem;
     letter-spacing: -0.5px;
 }
 
 .nav-link {
-    font-weight: 600;
+    font-weight: 500;
     transition: all 0.3s ease;
     position: relative;
     font-size: 1rem;
     letter-spacing: 0.2px;
-    color: var(--vm-primary) !important;
+    color: var(--text-primary) !important;
     padding: 0.5rem 1rem !important;
+    font-family: var(--font-secondary);
 }
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--vm-accent) !important;
+    color: var(--text-dark) !important;
     transform: translateY(-2px);
 }
 
@@ -320,7 +734,14 @@ p {
 }
 
 .navbar-toggler:focus {
-    box-shadow: 0 0 0 0.2rem rgba(231, 76, 60, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(44, 85, 48, 0.25);
+}
+
+/* ===== OFFCANVAS PROFESIONAL ===== */
+.offcanvas-title {
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-weight: 600;
 }
 
 .dropdown-menu {
@@ -335,24 +756,52 @@ p {
     font-weight: 500;
     transition: all 0.3s ease;
     padding: 0.75rem 1.5rem;
+    color: var(--text-primary);
+    font-family: var(--font-secondary);
 }
 
 .dropdown-item:hover {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(44, 62, 80, 0.05));
+    background: linear-gradient(135deg, rgba(44, 85, 48, 0.1), rgba(27, 42, 31, 0.05));
     transform: translateX(5px);
+    color: var(--text-dark);
 }
 
 .dropdown-header {
     font-weight: 700;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
 }
 
-/* ===== FOOTER CUSTOM STYLES ===== */
+/* ===== FOOTER CUSTOM STYLES PROFESIONALES ===== */
 .footer a:hover {
     color: white !important;
     transform: translateX(3px);
     transition: all 0.3s ease;
+}
+
+#footer h5 {
+    color: white !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+#footer .text-white-50 {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-family: var(--font-secondary);
+}
+
+/* ===== CONTACT SECTION PROFESIONAL ===== */
+#contacto .card-title {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+    font-weight: 600;
+}
+
+#contacto .text-muted {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
 }
 
 /* ===== FLOATING BUTTONS ===== */
@@ -409,13 +858,27 @@ p {
     h1 { font-size: 3rem; }
     h2 { font-size: 2.5rem; }
     h3 { font-size: 2rem; }
-    
+
     .display-1 { font-size: 4.5rem; }
     .display-2 { font-size: 4rem; }
     .display-3 { font-size: 3.5rem; }
     .display-4 { font-size: 3rem; }
     .display-5 { font-size: 2.5rem; }
     .display-6 { font-size: 2.2rem; }
+
+    .hero-logo img {
+        max-height: 160px !important;
+    }
+
+    .product-card .card img {
+        height: 240px !important;
+    }
+
+    /* Full-width container adjustments for medium screens */
+    .container-fluid {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 @media (max-width: 992px) {
@@ -437,22 +900,42 @@ p {
     .hero {
         min-height: 80vh;
     }
-    
+
+    /* Mejor contraste en móviles para Hero */
+    .hero h1,
+    .hero .display-1 {
+        text-shadow:
+            0 2px 6px rgba(0, 0, 0, 0.9),
+            0 4px 12px rgba(0, 0, 0, 0.7);
+    }
+
+    .hero .lead {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+    }
+
+    .hero .display-4 {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+    }
+
     h1 { font-size: 2.5rem; }
     h2 { font-size: 2.2rem; }
     h3 { font-size: 1.8rem; }
-    
+
     .display-1 { font-size: 3.5rem; }
     .display-2 { font-size: 3rem; }
     .display-3 { font-size: 2.8rem; }
     .display-4 { font-size: 2.5rem; }
     .display-5 { font-size: 2.2rem; }
     .display-6 { font-size: 2rem; }
-    
+
     .lead {
         font-size: 1.2rem;
     }
-    
+
     p {
         font-size: 1rem;
     }
@@ -472,9 +955,46 @@ p {
     .product-card .card:hover {
         transform: none;
     }
-    
+
+    .product-card .card img {
+        height: 220px !important;
+    }
+
     #whatsapp-float span {
         display: none !important;
+    }
+
+    /* Mobile FAQ adjustments */
+    .accordion-body .row > div {
+        margin-bottom: 1rem;
+    }
+
+    .accordion-body .col-lg-8,
+    .accordion-body .col-lg-4 {
+        width: 100%;
+    }
+
+    .hero-logo img {
+        max-height: 120px !important;
+    }
+
+    /* Mejor contraste para características en móviles */
+    .hero .text-center small {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        min-width: 140px;
+    }
+
+    /* Full-width mobile adjustments */
+    .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Mobile product grid - ensure proper spacing */
+    .product-card {
+        margin-bottom: 1.5rem;
     }
 }
 
@@ -482,23 +1002,43 @@ p {
     .hero {
         min-height: 70vh;
     }
-    
+
+    /* Aún mejor contraste en móviles pequeños */
+    .hero h1,
+    .hero .display-1 {
+        text-shadow:
+            0 3px 8px rgba(0, 0, 0, 0.9),
+            0 6px 16px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero .lead {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 1rem;
+        border-radius: 10px;
+    }
+
+    .hero .display-4 {
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+    }
+
     h1 { font-size: 2rem; }
     h2 { font-size: 1.8rem; }
     h3 { font-size: 1.6rem; }
-    
+
     .display-1 { font-size: 2.8rem; }
     .display-2 { font-size: 2.5rem; }
     .display-3 { font-size: 2.2rem; }
     .display-4 { font-size: 2rem; }
     .display-5 { font-size: 1.8rem; }
     .display-6 { font-size: 1.6rem; }
-    
+
     .container {
         padding-left: 15px;
         padding-right: 15px;
     }
-    
+
     .btn-lg {
         padding: 0.75rem 1.5rem;
         font-size: 1rem;
@@ -539,13 +1079,32 @@ p {
     }
 }
 
-/* ===== FOCUS STATES FOR ACCESSIBILITY ===== */
+/* ===== FOCUS STATES FOR ACCESSIBILITY PROFESIONAL ===== */
 .btn:focus,
 .nav-link:focus,
 .form-control:focus,
 .form-select:focus {
-    outline: 3px solid rgba(231, 76, 60, 0.5);
+    outline: 3px solid rgba(44, 85, 48, 0.5);
     outline-offset: 2px;
+}
+
+/* ===== BADGES PROFESIONALES ===== */
+.badge {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+/* ===== CATEGORY BADGES MEJOR CONTRASTE ===== */
+.category-section h3 {
+    color: var(--text-primary) !important;
+    font-family: var(--font-primary);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.category-section .text-muted {
+    color: var(--text-secondary) !important;
+    font-family: var(--font-secondary);
 }
 
 /* ===== LOADING STATES ===== */
@@ -666,7 +1225,7 @@ p {
 
 /* ===== PRODUCT OVERLAY IMPROVEMENTS ===== */
 .product-overlay {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(44, 62, 80, 0.8)) !important;
+    background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(52, 73, 94, 0.9)) !important;
     backdrop-filter: blur(5px);
 }
 
