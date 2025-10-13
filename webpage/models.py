@@ -32,7 +32,7 @@ class FotosSubcategoria(models.Model):
     imagen = models.ImageField(upload_to=upload_to_categoria, verbose_name="Imagen")
     descripcion = models.CharField(max_length=200, blank=True, null=True, verbose_name="Descripción de la imagen")
     orden = models.PositiveIntegerField(default=0, verbose_name="Orden",
-                                        help_text="Orden de visualización (0 = primera)")
+                                         help_text="Orden de visualización (0 = primera)")
     fecha_subida = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de subida")
 
     class Meta:
@@ -42,6 +42,7 @@ class FotosSubcategoria(models.Model):
 
     def __str__(self):
         return f"Foto {self.orden + 1} - {self.subcategoria.nombre}"
+
 
     def _process_image(self, image_field, target_width=1200, target_height=800, quality=85):
         """
@@ -108,3 +109,20 @@ class FotosSubcategoria(models.Model):
                 self.imagen = processed_image
 
         super().save(*args, **kwargs)
+
+class Contacto(models.Model):
+    nombre = models.CharField(max_length=100, verbose_name="Nombre")
+    email = models.EmailField(verbose_name="Email")
+    telefono = models.CharField(max_length=20, blank=True, null=True, verbose_name="Teléfono")
+    categoria = models.CharField(max_length=100, blank=True, null=True, verbose_name="Categoría de interés")
+    mensaje = models.TextField(verbose_name="Mensaje")
+    fecha_contacto = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de contacto")
+    email_enviado = models.BooleanField(default=False, verbose_name="Email enviado")
+
+    class Meta:
+        ordering = ['-fecha_contacto']
+        verbose_name = "Contacto"
+        verbose_name_plural = "Contactos"
+
+    def __str__(self):
+        return f"{self.nombre} - {self.fecha_contacto.strftime('%d/%m/%Y %H:%M')}"

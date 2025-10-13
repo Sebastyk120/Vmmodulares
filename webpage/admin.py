@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Categoria, Subcategoria, FotosSubcategoria
+from .models import Categoria, Subcategoria, FotosSubcategoria, Contacto
 
 
 @admin.register(Categoria)
@@ -85,6 +85,29 @@ class FotosSubcategoriaAdmin(admin.ModelAdmin):
         if not obj.descripcion and obj.subcategoria:
             obj.descripcion = obj.subcategoria.nombre
         super().save_model(request, obj, form, change)
+
+
+@admin.register(Contacto)
+class ContactoAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'email', 'telefono', 'categoria', 'fecha_contacto', 'email_enviado')
+    list_filter = ('categoria', 'fecha_contacto', 'email_enviado')
+    search_fields = ('nombre', 'email', 'telefono', 'categoria', 'mensaje')
+    ordering = ('-fecha_contacto',)
+    readonly_fields = ('fecha_contacto', 'mensaje')
+    fields = ('nombre', 'email', 'telefono', 'categoria', 'mensaje', 'fecha_contacto', 'email_enviado')
+
+    def mensaje(self, obj):
+        # Mostrar el mensaje con formato de texto largo
+        return format_html('<pre style="white-space: pre-wrap; max-width: 600px;">{}</pre>', obj.mensaje)
+    mensaje.short_description = 'Mensaje'
+
+    def has_add_permission(self, request):
+        # No permitir agregar contactos manualmente desde admin
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        # Permitir eliminar contactos
+        return True
 
 
 # Personalización del admin site

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import Categoria, Subcategoria, FotosSubcategoria
+from .models import Categoria, Subcategoria, FotosSubcategoria, Contacto
 from captcha.models import CaptchaStore
 from captcha.helpers import captcha_image_url
 from captcha.fields import CaptchaField
@@ -143,7 +143,22 @@ def contacto(request):
         Este mensaje fue enviado desde el formulario de contacto de VM Modulares.
         """
         
+        # Guardar el contacto en la base de datos
+        try:
+            contacto = Contacto.objects.create(
+                nombre=nombre,
+                email=email,
+                telefono=telefono,
+                categoria=categoria,
+                mensaje=mensaje,
+                email_enviado=False  # Se actualizará después si el email se envía correctamente
+            )
+        except Exception as e:
+            print(f"Error guardando contacto en BD: {e}")
+            # No fallar si no se puede guardar en BD
+
         # Enviar email (configurar en settings.py)
+        email_enviado = False
         try:
             send_mail(
                 asunto,
@@ -152,9 +167,18 @@ def contacto(request):
                 [settings.DEFAULT_FROM_EMAIL],  # Email al que envio el correo, validar con andres.
                 fail_silently=False,
             )
+            email_enviado = True
         except Exception as e:
             print(f"Error enviando email: {e}")
             # No fallar si el email no se puede enviar
+
+        # Actualizar el estado del email si se guardó correctamente
+        if email_enviado and 'contacto' in locals():
+            try:
+                contacto.email_enviado = True
+                contacto.save(update_fields=['email_enviado'])
+            except:
+                pass  # No fallar si no se puede actualizar
         
         return JsonResponse({
             'success': True,
