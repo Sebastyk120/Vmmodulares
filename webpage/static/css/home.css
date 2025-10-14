@@ -875,8 +875,7 @@ small {
     /* Hero Section Mobile Optimization */
     .hero {
         min-height: 85vh;
-        padding: 6rem 0 2rem 0;
-        margin-top: 0;
+        padding: 2rem 0;
     }
 
     .hero h1,
@@ -1154,8 +1153,7 @@ small {
     /* Hero Extra Small Mobile */
     .hero {
         min-height: 100vh;
-        padding: 6rem 0 1.5rem 0;
-        margin-top: 0;
+        padding: 1.5rem 0;
     }
 
     .hero h1,
