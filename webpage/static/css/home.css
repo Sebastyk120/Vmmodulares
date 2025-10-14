@@ -875,7 +875,7 @@ small {
     /* Hero Section Mobile Optimization */
     .hero {
         min-height: 85vh;
-        padding: 1rem 0;
+        padding: 2rem 0;
     }
 
     .hero h1,
@@ -902,8 +902,8 @@ small {
     }
 
     .hero-logo img {
-        max-height: 100px !important;
-        margin-bottom: 1.5rem !important;
+        max-height: 120px !important;
+        margin-bottom: 2rem !important;
     }
 
     /* Hero Features Grid - Better Mobile Layout */
@@ -1153,7 +1153,7 @@ small {
     /* Hero Extra Small Mobile */
     .hero {
         min-height: 100vh;
-        padding: 0.5rem 0;
+        padding: 1.5rem 0;
     }
 
     .hero h1,
@@ -1174,8 +1174,8 @@ small {
     }
 
     .hero-logo img {
-        max-height: 80px !important;
-        margin-bottom: 1rem !important;
+        max-height: 100px !important;
+        margin-bottom: 1.5rem !important;
     }
 
     .hero .col-6 {
