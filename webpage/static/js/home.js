@@ -1155,6 +1155,11 @@ function openContextualContact(subject) {
     const modal = new bootstrap.Modal(document.getElementById('contextualContactModal'));
     modal.show();
 
+    // Refrescar el captcha automáticamente al abrir el modal
+    setTimeout(() => {
+        refreshContextualCaptcha();
+    }, 100);
+
     // Configurar envío del formulario
     const form = document.querySelector('.contextual-contact-form');
     form.addEventListener('submit', async (e) => {
@@ -1230,12 +1235,25 @@ function refreshContextualCaptcha() {
     .then(response => response.json())
     .then(data => {
         const captchaImage = document.getElementById('contextual-captcha-image');
+        const captchaKeyInput = document.querySelector('#contextualContactModal input[name="captcha_0"]');
+        const captchaValueInput = document.querySelector('#contextualContactModal input[name="captcha_1"]');
+
         if (captchaImage && data.image_url) {
             captchaImage.src = data.image_url;
+        }
+
+        if (captchaKeyInput && data.key) {
+            captchaKeyInput.value = data.key;
+        }
+
+        if (captchaValueInput) {
+            captchaValueInput.value = '';
+            captchaValueInput.focus();
         }
     })
     .catch(error => {
         console.error('Error al refrescar captcha:', error);
+        Utils.showToast('Error al refrescar el captcha', 'error');
     });
 }
 
