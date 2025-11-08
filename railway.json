@@ -1,14 +1,11 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS",
-    "nixpacks": {
-      "configFile": "nixpacks.toml"
-    }
+    "builder": "RAILPACK"
   },
   "deploy": {
-    "startCommand": "gunicorn Vmmodulares.wsgi",
+    "startCommand": "gunicorn Vmmodulares.wsgi:application --bind 0.0.0.0:$PORT --worker-class sync",
     "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 10
+    "restartPolicyMaxRetries": 3
   }
 }
