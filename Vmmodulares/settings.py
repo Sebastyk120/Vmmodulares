@@ -100,7 +100,7 @@ DATABASES = {
 }
 
 """
-DATABASES = {
+DATABASES2 = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'vm_modulares',
